@@ -1,46 +1,42 @@
 import 'package:get/get.dart';
-import '../../features/article/view/home_view.dart';
-import '../../features/article/view/article_view.dart';
-import '../../features/settings/view/settings_view.dart';
-import '../../features/history/view/history_view.dart';
+
+import '../../features/articles/bindings/article_binding.dart';
+import '../../features/articles/views/article_page.dart';
+import '../../features/history/bindings/history_binding.dart';
+import '../../features/history/views/history_page.dart';
+import '../../features/home/bindings/home_binding.dart';
+import '../../features/home/views/home_page.dart';
+import '../../features/settings/bindings/settings_binding.dart';
+import '../../features/settings/views/settings_page.dart';
 
 class AppRoutes {
   static const String home = '/';
   static const String article = '/article';
-  static const String articleWithUrl = '/article/:url';
-  static const String settings = '/settings';
   static const String history = '/history';
+  static const String settings = '/settings';
+}
 
-  static List<GetPage> routes = [
+class AppPages {
+  static final routes = [
     GetPage(
-      name: home,
-      page: () => const HomeView(),
-      transition: Transition.fadeIn,
-      transitionDuration: const Duration(milliseconds: 300),
+      name: AppRoutes.home,
+      page: () => const HomePage(),
+      binding: HomeBinding(),
     ),
     GetPage(
-      name: article,
-      page: () => const ArticleView(),
-      transition: Transition.rightToLeft,
-      transitionDuration: const Duration(milliseconds: 300),
+      name: AppRoutes.article,
+      page: () => const ArticlePage(),
+      binding: ArticleBinding(),
     ),
     GetPage(
-      name: articleWithUrl,
-      page: () => const ArticleView(),
-      transition: Transition.rightToLeft,
-      transitionDuration: const Duration(milliseconds: 300),
+      name: AppRoutes.history,
+      page: () => const HistoryPage(),
+      binding: HistoryBinding(),
     ),
     GetPage(
-      name: settings,
-      page: () => const SettingsView(),
-      transition: Transition.rightToLeft,
-      transitionDuration: const Duration(milliseconds: 300),
-    ),
-    GetPage(
-      name: history,
-      page: () => const HistoryView(),
-      transition: Transition.rightToLeft,
-      transitionDuration: const Duration(milliseconds: 300),
+      name: AppRoutes.settings,
+      page: () => const SettingsPage(),
+      binding: SettingsBinding(),
     ),
   ];
 }
