@@ -92,4 +92,32 @@ class UrlValidator {
     final uri = Uri.tryParse(url);
     return uri?.host;
   }
+
+  /// Extracts the first http/https URL found in the text
+  static String? extractUrlFromText(String text) {
+    if (text.isEmpty) return null;
+
+    // Regex to find http or https URLs
+    // Captures http:// or https:// followed by non-whitespace characters
+    final RegExp urlFinder = RegExp(
+      r'(https?:\/\/[^\s]+)',
+      caseSensitive: false,
+    );
+
+    final match = urlFinder.firstMatch(text);
+    return match?.group(0);
+  }
+
+  /// Cleans Textise URLs to extract the actual target URL
+  static String? cleanTextiseUrl(String url) {
+    if (url.isEmpty) return null;
+
+    if (url.contains('textise.org')) {
+      final uri = Uri.tryParse(url);
+      if (uri != null && uri.queryParameters.containsKey('strURL')) {
+        return uri.queryParameters['strURL'];
+      }
+    }
+    return url;
+  }
 }

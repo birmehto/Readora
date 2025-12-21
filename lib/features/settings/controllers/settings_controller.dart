@@ -70,6 +70,40 @@ class SettingsController extends GetxController {
     }
   }
 
+  Future<void> openPrivacyPolicy() async {
+    // Replace with your actual Privacy Policy URL
+    final url = Uri.parse(
+      'https://www.freeprivacypolicy.com/live/your-privacy-policy-url',
+    );
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  Future<void> openTermsOfService() async {
+    // Replace with your actual Terms of Service URL
+    final url = Uri.parse('https://www.termsfeed.com/live/your-terms-url');
+    if (await canLaunchUrl(url)) {
+      await launchUrl(url, mode: LaunchMode.externalApplication);
+    }
+  }
+
+  Future<void> sendFeedback() async {
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'support@example.com',
+      query: 'subject=Readora%20Feedback',
+    );
+
+    if (await canLaunchUrl(emailLaunchUri)) {
+      await launchUrl(emailLaunchUri);
+    }
+  }
+
+  Future<void> rateApp() async {
+    await openPlayStore();
+  }
+
   Future<void> clearHistory() async {
     await _storage.clearHistory();
   }

@@ -51,4 +51,27 @@ class StorageService extends GetxService {
   Future<void> clearHistory() async {
     await _box.write(_historyKey, []);
   }
+
+  // Favorites
+  static const String _favoritesKey = 'favorites_list';
+  List<dynamic> get favorites => _box.read(_favoritesKey) ?? [];
+
+  Future<void> addToFavorites(Map<String, dynamic> item) async {
+    final list = favorites;
+    // Avoid duplicates
+    if (!list.any((element) => element['url'] == item['url'])) {
+      list.insert(0, item);
+      await _box.write(_favoritesKey, list);
+    }
+  }
+
+  Future<void> removeFromFavorites(String url) async {
+    final list = favorites;
+    list.removeWhere((element) => element['url'] == url);
+    await _box.write(_favoritesKey, list);
+  }
+
+  bool isFavorite(String url) {
+    return favorites.any((element) => element['url'] == url);
+  }
 }

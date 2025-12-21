@@ -5,8 +5,8 @@ import 'package:get/get.dart';
 import 'core/routes/app_routes.dart';
 import 'core/theme/app_theme.dart';
 
-class ArticleReaderApp extends StatelessWidget {
-  const ArticleReaderApp({super.key});
+class Readora extends StatelessWidget {
+  const Readora({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,6 +22,7 @@ class ArticleReaderApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: AppRoutes.home,
           getPages: AppPages.routes,
+          defaultTransition: Transition.cupertino,
         );
       },
     );

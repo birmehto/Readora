@@ -89,7 +89,6 @@ class _SnackContent extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Icon(icon, color: foreground),
             const SizedBox(width: 12),

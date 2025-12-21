@@ -12,6 +12,5 @@ void main() async {
   await Get.putAsync(() => StorageService().init());
   await Get.putAsync(() => ShareIntentService().init());
   Get.put(ClipboardService());
-  // Readium
-  runApp(const ArticleReaderApp());
+  runApp(const Readora());
 }

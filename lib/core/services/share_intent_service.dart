@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../features/home/controllers/home_controller.dart';
+import '../utils/url_validator.dart';
 
 class ShareIntentService extends GetxService {
   static const _channel = MethodChannel('app.channel.shared.data');
@@ -11,18 +12,38 @@ class ShareIntentService extends GetxService {
     // Handle incoming intents when app is running
     _channel.setMethodCallHandler((call) async {
       if (call.method == 'handleSharedUrl') {
-        final String? url = call.arguments as String?;
-        if (url != null && url.isNotEmpty) {
-          _openArticle(url);
+        final String? sharedText = call.arguments as String?;
+        if (sharedText != null && sharedText.isNotEmpty) {
+          // Extract URL from shared text (which may contain title, etc.)
+          String? url = UrlValidator.extractUrlFromText(sharedText);
+
+          if (url != null) {
+            // Clean Textise URL if present
+            url = UrlValidator.cleanTextiseUrl(url);
+
+            if (url != null && url.isNotEmpty) {
+              _openArticle(url);
+            }
+          }
         }
       }
     });
 
     // Check for initial intent when app starts
     try {
-      final String? initialUrl = await _channel.invokeMethod('getInitialUrl');
-      if (initialUrl != null && initialUrl.isNotEmpty) {
-        _openArticle(initialUrl);
+      final String? sharedText = await _channel.invokeMethod('getInitialUrl');
+      if (sharedText != null && sharedText.isNotEmpty) {
+        // Extract URL from shared text
+        String? url = UrlValidator.extractUrlFromText(sharedText);
+
+        if (url != null) {
+          // Clean Textise URL if present
+          url = UrlValidator.cleanTextiseUrl(url);
+
+          if (url != null && url.isNotEmpty) {
+            _openArticle(url);
+          }
+        }
       }
     } catch (e) {
       // Ignored

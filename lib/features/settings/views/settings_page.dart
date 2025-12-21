@@ -155,6 +155,62 @@ class SettingsPage extends GetView<SettingsController> {
             ],
           ),
 
+          _buildSectionHeader(context, 'Support'),
+          _buildCard(
+            context,
+            children: [
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                leading: const Icon(Icons.star_rate_rounded),
+                title: const Text('Rate App'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: controller.rateApp,
+              ),
+              const Divider(height: 1, indent: 16, endIndent: 16),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                leading: const Icon(Icons.mail_outline_rounded),
+                title: const Text('Send Feedback'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: controller.sendFeedback,
+              ),
+            ],
+          ),
+
+          _buildSectionHeader(context, 'Legal'),
+          _buildCard(
+            context,
+            children: [
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                leading: const Icon(Icons.privacy_tip_outlined),
+                title: const Text('Privacy Policy'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: controller.openPrivacyPolicy,
+              ),
+              const Divider(height: 1, indent: 16, endIndent: 16),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                leading: const Icon(Icons.description_outlined),
+                title: const Text('Terms of Service'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: controller.openTermsOfService,
+              ),
+            ],
+          ),
+
           _buildSectionHeader(context, 'Storage'),
           _buildCard(
             context,

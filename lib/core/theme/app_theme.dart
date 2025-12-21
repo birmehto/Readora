@@ -6,7 +6,6 @@ class AppTheme {
     fontFamily: 'Inter',
     colorScheme: ColorScheme.fromSeed(
       seedColor: Colors.teal,
-      brightness: Brightness.light,
       surface: const Color(0xFFFDFDFD),
     ),
     scaffoldBackgroundColor: const Color(0xFFFDFDFD),

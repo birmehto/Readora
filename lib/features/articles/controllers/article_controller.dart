@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:get/get.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -35,7 +36,11 @@ class ArticleController extends GetxController {
   final fontFamily = 'Inter'.obs;
 
   // TTS
+  final FlutterTts _flutterTts = FlutterTts();
   final isSpeaking = false.obs;
+
+  // Favorites
+  final isFavorite = false.obs;
 
   // Fallback state
   bool _isUsingFallback = false;
@@ -74,7 +79,20 @@ class ArticleController extends GetxController {
     loadingProgress.value = 0.0;
     _startLoadingTimer();
 
+    // Check if article is in favorites
+    isFavorite.value = _storage.isFavorite(originalUrl.value);
+
+    // Setup TTS handlers
+    _setupTts();
+
     appLog('Current URL set to: ${currentUrl.value}');
+  }
+
+  void _setupTts() {
+    _flutterTts.setStartHandler(() => isSpeaking.value = true);
+    _flutterTts.setCompletionHandler(() => isSpeaking.value = false);
+    _flutterTts.setCancelHandler(() => isSpeaking.value = false);
+    _flutterTts.setErrorHandler((_) => isSpeaking.value = false);
   }
 
   /// Called by WebView when page finished loading
@@ -218,6 +236,51 @@ class ArticleController extends GetxController {
     await _clipboardService.copyToClipboard(originalUrl.value);
   }
 
+  // ---------- TTS ----------
+
+  Future<void> toggleTts() async {
+    if (isSpeaking.value) {
+      await _flutterTts.stop();
+      isSpeaking.value = false;
+    } else {
+      if (webViewController == null) return;
+
+      // Extract text from the article body
+      final result = await webViewController?.evaluateJavascript(
+        source: "document.body.innerText || ''",
+      );
+
+      if (result != null && result is String && result.isNotEmpty) {
+        // Limit text length for TTS performance
+        final text = result.length > 10000
+            ? result.substring(0, 10000)
+            : result;
+        await _flutterTts.speak(text);
+      }
+    }
+  }
+
+  // ---------- Favorites ----------
+
+  Future<void> toggleFavorite() async {
+    final url = originalUrl.value.isNotEmpty
+        ? originalUrl.value
+        : currentUrl.value;
+    if (url.isEmpty) return;
+
+    if (isFavorite.value) {
+      await _storage.removeFromFavorites(url);
+      isFavorite.value = false;
+    } else {
+      await _storage.addToFavorites({
+        'title': articleTitle,
+        'url': url,
+        'visitedAt': DateTime.now().toIso8601String(),
+      });
+      isFavorite.value = true;
+    }
+  }
+
   // ---------- Reader Settings ----------
 
   void updateFontSize(double size) {
@@ -280,6 +343,7 @@ class ArticleController extends GetxController {
   @override
   void onClose() {
     _cancelLoadingTimer();
+    _flutterTts.stop();
     super.onClose();
   }
 

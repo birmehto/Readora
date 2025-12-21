@@ -19,6 +19,7 @@ class HomeController extends GetxController {
   final RxBool isLoading = false.obs;
 
   final RxList<HistoryItem> recentHistory = <HistoryItem>[].obs;
+  final RxList<HistoryItem> favorites = <HistoryItem>[].obs;
 
   @override
   void onInit() {
@@ -27,14 +28,16 @@ class HomeController extends GetxController {
       urlText.value = urlController.text;
     });
     loadRecentHistory();
+    loadFavorites();
     _autoCheckClipboard();
   }
 
   @override
   void onReady() {
     super.onReady();
-    // Reload history when returning to this page
+    // Reload history and favorites when returning to this page
     loadRecentHistory();
+    loadFavorites();
   }
 
   @override
@@ -47,6 +50,13 @@ class HomeController extends GetxController {
     final rawList = _storageService.history;
     recentHistory.value = rawList
         .take(5) // Take only top 5 for home page
+        .map((e) => HistoryItem.fromJson(Map<String, dynamic>.from(e)))
+        .toList();
+  }
+
+  void loadFavorites() {
+    final rawList = _storageService.favorites;
+    favorites.value = rawList
         .map((e) => HistoryItem.fromJson(Map<String, dynamic>.from(e)))
         .toList();
   }
