@@ -5,70 +5,180 @@ class UrlValidator {
       r'^https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)$';
   static final RegExp _urlRegex = RegExp(_urlPattern);
 
+  /// Known Medium custom domain publications
+  /// These are popular Medium publications that use custom domains
+  static const List<String> _knownMediumCustomDomains = [
+    'towardsdatascience.com',
+    'betterhumans.pub',
+    'betterprogramming.pub',
+    'eand.co',
+    'arcdigital.media',
+    'blog.prototypr.io',
+    'uxdesign.cc',
+    'levelup.gitconnected.com',
+    'javascript.plainenglish.io',
+    'python.plainenglish.io',
+    'aws.plainenglish.io',
+    'blog.devgenius.io',
+    'entrepreneurshandbook.co',
+    'bettermarketing.pub',
+    'writingcooperative.com',
+    'psiloveyou.xyz',
+    'codeburst.io',
+    'itnext.io',
+    'blog.bitsrc.io',
+    'netflixtechblog.com',
+    'engineering.atspotify.com',
+    'slack.engineering',
+    'blog.usejournal.com',
+    'uxplanet.org',
+    'thebolditalic.com',
+    'hackernoon.com',
+  ];
+
   /// Validate if the string is a valid URL
   static bool isValidUrl(String url) {
     if (url.isEmpty) return false;
     return _urlRegex.hasMatch(url);
   }
 
-  /// Check if URL is a Medium article
+  /// Check if URL is a Medium article or can be handled by Freedium
+  /// This includes:
+  /// 1. medium.com/* - Main Medium domain
+  /// 2. *.medium.com/* - Subdomain based Medium profiles
+  /// 3. Known custom domain Medium publications
+  /// 4. Any other URL (Freedium can handle most Medium-hosted content)
   static bool isMediumUrl(String url) {
     if (!isValidUrl(url)) return false;
 
     final uri = Uri.tryParse(url);
     if (uri == null) return false;
 
-    // Check for medium.com domain
-    if (uri.host == MediumConstants.mediumDomain) return true;
+    final host = uri.host.toLowerCase();
+
+    // Check for medium.com domain (with or without www)
+    if (host == MediumConstants.mediumDomain ||
+        host == 'www.${MediumConstants.mediumDomain}') {
+      return true;
+    }
 
     // Check for medium subdomain (e.g., username.medium.com)
-    final subdomainRegex = RegExp(MediumConstants.mediumSubdomainPattern);
-    if (subdomainRegex.hasMatch(uri.host)) return true;
+    if (host.endsWith('.medium.com')) {
+      return true;
+    }
 
-    return false;
+    // Check for known Medium custom domains
+    for (final domain in _knownMediumCustomDomains) {
+      if (host == domain || host == 'www.$domain') {
+        return true;
+      }
+    }
+
+    // For any other valid URL, we'll allow it and let Freedium handle it
+    // This enables support for custom domain Medium publications
+    // Even if it's not a Medium link, Freedium will show an appropriate error
+    return true;
   }
 
-  /// Check if URL is a Medium article (not just profile or publication)
+  /// Check if URL looks like it could be an article
+  /// This is a more lenient check that looks for common article URL patterns
   static bool isMediumArticle(String url) {
-    if (!isMediumUrl(url)) return false;
+    if (!isValidUrl(url)) return false;
 
     final uri = Uri.tryParse(url);
     if (uri == null) return false;
 
+    final host = uri.host.toLowerCase();
     final path = uri.path;
 
-    // Check for article path patterns
-    final articleRegex = RegExp(MediumConstants.articlePathPattern);
-    final publicationRegex = RegExp(MediumConstants.publicationPathPattern);
+    // If it's a known Medium domain, check for article patterns
+    if (host == MediumConstants.mediumDomain ||
+        host == 'www.${MediumConstants.mediumDomain}' ||
+        host.endsWith('.medium.com')) {
+      // Any medium.com path with at least one segment that isn't a search/topic/etc.
+      final segments = uri.pathSegments;
+      if (segments.isEmpty) return false;
 
-    return articleRegex.hasMatch(path) || publicationRegex.hasMatch(path);
-  }
-
-  /// Extract article ID from Medium URL
-  static String? extractArticleId(String url) {
-    if (!isMediumArticle(url)) return null;
-
-    final uri = Uri.tryParse(url);
-    if (uri == null) return null;
-
-    // Extract the last part of the path as article ID
-    final pathSegments = uri.pathSegments;
-    if (pathSegments.isNotEmpty) {
-      return pathSegments.last;
+      final firstSegment = segments[0];
+      // Skip known non-article pages
+      if ([
+        'search',
+        'topic',
+        'membership',
+        'creators',
+        'about',
+        'plans',
+      ].contains(firstSegment)) {
+        return false;
+      }
+      return true;
     }
 
-    return null;
+    // For custom domains and other URLs, just check if there's a path
+    return path.length > 1 && path != '/';
   }
 
-  /// Convert Medium URL to Freedium URL
-  static String? convertToFreediumUrl(String mediumUrl) {
-    if (!isMediumArticle(mediumUrl)) return null;
+  /// Extract any URL found in the text and clean it
+  static String? extractUrlFromText(String text) {
+    if (text.isEmpty) return null;
 
-    final uri = Uri.tryParse(mediumUrl);
-    if (uri == null) return null;
+    // Regex to find http or https URLs
+    final RegExp urlFinder = RegExp(
+      r'(https?:\/\/[^\s]+)',
+      caseSensitive: false,
+    );
 
-    // Create Freedium URL
-    return '${MediumConstants.freediumUrl}${uri.path}';
+    final match = urlFinder.firstMatch(text);
+    if (match == null) return null;
+
+    String url = match.group(0)!;
+
+    // Remove trailing punctuation that might be part of the shared text but not the URL
+    // e.g., "Check this: https://medium.com/abc. It's good!" -> match is "https://medium.com/abc."
+    while (url.isNotEmpty &&
+        (url.endsWith('.') ||
+            url.endsWith(',') ||
+            url.endsWith('!') ||
+            url.endsWith('?') ||
+            url.endsWith(';') ||
+            url.endsWith(':'))) {
+      url = url.substring(0, url.length - 1);
+    }
+
+    return url;
+  }
+
+  /// Convert any URL to Freedium URL for reading
+  /// We always prepend the Freedium base URL to the full article URL
+  /// as this is the most reliable way Freedium handles both standard and custom domains.
+  static String? convertToFreediumUrl(String articleUrl) {
+    if (!isValidUrl(articleUrl)) return null;
+
+    String targetUrl = cleanUrl(articleUrl) ?? articleUrl;
+
+    // Strip existing Freedium or ReadMedium prefixes to prevent double-prefixing
+    // and to fix any already corrupted URLs in history
+    final prefixes = [
+      '${MediumConstants.freediumUrl}/',
+      'https://freedium.cfd/',
+      'https://readmedium.com/',
+      '${MediumConstants.readMediumUrl}/',
+    ];
+
+    bool stripped = true;
+    while (stripped) {
+      stripped = false;
+      for (final prefix in prefixes) {
+        if (targetUrl.startsWith(prefix)) {
+          targetUrl = targetUrl.substring(prefix.length);
+          stripped = true;
+        }
+      }
+    }
+
+    // Now targetUrl is stripped of bypass prefixes.
+    // Prepend the primary Freedium URL.
+    return '${MediumConstants.freediumUrl}/$targetUrl';
   }
 
   /// Validate and clean URL
@@ -83,29 +193,6 @@ class UrlValidator {
     }
 
     return isValidUrl(cleaned) ? cleaned : null;
-  }
-
-  /// Extract domain from URL
-  static String? extractDomain(String url) {
-    if (!isValidUrl(url)) return null;
-
-    final uri = Uri.tryParse(url);
-    return uri?.host;
-  }
-
-  /// Extracts the first http/https URL found in the text
-  static String? extractUrlFromText(String text) {
-    if (text.isEmpty) return null;
-
-    // Regex to find http or https URLs
-    // Captures http:// or https:// followed by non-whitespace characters
-    final RegExp urlFinder = RegExp(
-      r'(https?:\/\/[^\s]+)',
-      caseSensitive: false,
-    );
-
-    final match = urlFinder.firstMatch(text);
-    return match?.group(0);
   }
 
   /// Cleans Textise URLs to extract the actual target URL

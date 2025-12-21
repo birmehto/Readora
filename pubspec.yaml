@@ -1,4 +1,4 @@
-name: free
+name: readora
 description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0
@@ -19,7 +19,6 @@ dependencies:
   get_storage: ^2.1.1
   expressive_loading_indicator: ^0.0.1
   material_new_shapes: ^1.0.0
-  flutter_tts: ^4.2.3
   animations: ^2.1.1
 
   

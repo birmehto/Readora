@@ -144,9 +144,11 @@ class HomeController extends GetxController {
   }
 
   void openHistoryItem(HistoryItem item) {
+    final url = item.url;
+    final freediumUrl = UrlValidator.convertToFreediumUrl(url) ?? url;
     Get.toNamed(
       AppRoutes.article,
-      arguments: {'url': item.url, 'originalUrl': item.url},
+      arguments: {'url': freediumUrl, 'originalUrl': url},
     );
   }
 

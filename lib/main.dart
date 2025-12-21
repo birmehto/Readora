@@ -8,7 +8,6 @@ import 'core/services/storage_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Initialize Services
   await Get.putAsync(() => StorageService().init());
   await Get.putAsync(() => ShareIntentService().init());
   Get.put(ClipboardService());

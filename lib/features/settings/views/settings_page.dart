@@ -162,6 +162,28 @@ class SettingsPage extends GetView<SettingsController> {
               ListTile(
                 contentPadding: const EdgeInsets.symmetric(
                   horizontal: 16,
+                  vertical: 8,
+                ),
+                leading: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Colors.amber.shade100,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Icon(
+                    Icons.coffee_rounded,
+                    color: Colors.amber.shade800,
+                  ),
+                ),
+                title: const Text('Buy Me a Coffee'),
+                subtitle: const Text('Support the developer'),
+                trailing: const Icon(Icons.chevron_right_rounded),
+                onTap: controller.openDonationLink,
+              ),
+              const Divider(height: 1, indent: 16, endIndent: 16),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
                   vertical: 4,
                 ),
                 leading: const Icon(Icons.star_rate_rounded),
@@ -276,10 +298,62 @@ class SettingsPage extends GetView<SettingsController> {
                 onTap:
                     controller.openDonationLink, // Linking to donation/social
               ),
+              const Divider(height: 1, indent: 16, endIndent: 16),
+              ListTile(
+                contentPadding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                leading: const Icon(Icons.gavel_rounded),
+                title: const Text('Licenses & Credits'),
+                onTap: () => _showCreditsDialog(context),
+              ),
             ],
           ),
 
           const SizedBox(height: 48),
+        ],
+      ),
+    );
+  }
+
+  void _showCreditsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Licenses & Credits'),
+        content: SingleChildScrollView(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Readora is an unofficial application not affiliated with A Medium Corporation.',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 16),
+              const Text('• "Medium" is a trademark of A Medium Corporation.'),
+              const SizedBox(height: 8),
+              const Text(
+                '• This app uses third-party services like Freedium and ReadMedium to provide content.',
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                '• This software is provided "as is" under the MIT License.',
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'All article content remains the property of their respective authors and publishers.',
+                style: Theme.of(context).textTheme.bodySmall,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Close'),
+          ),
         ],
       ),
     );

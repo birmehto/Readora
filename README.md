@@ -1,67 +1,41 @@
-# 📖 Read
+# 📖 Readora
 
-**Read** is a minimalist, powerful application designed to provide a seamless reading experience for Medium articles. It automatically detects links, bypasses distractions, and offers a premium reading environment.
+**Readora** is a minimalist app to read Medium articles distraction-free and without paywalls.
 
 ## ✨ Features
+- � **Bypass Paywalls**: Read premium articles instantly via Freedium/ReadMedium.
+- 🔗 **Smart Links**: Handles all Medium domains, subdomains, and publications.
+- 🧹 **Clean UI**: No ads, no clutter, just content.
+- 🎨 **Customizable**: Change fonts, sizes, and switch to Dark Mode.
+- 📚 **History**: Automatically saves what you've read.
 
-### 🔥 Smart Reading
-- **Auto-Clipboard Detection**: Automatically detects Medium links from your clipboard.
-- **Distraction-Free**: Clean, reader-focused UI with adjustable fonts and themes.
-- **Paywall Bypass**: Access content directly without limitations.
+## 📸 Screenshots
+| Home | Reader | History | Settings |
+|:---:|:---:|:---:|:---:|
+| ![Home](screenshots/home.png) | ![Article](screenshots/article.png) | ![History](screenshots/history.png) | ![Settings](screenshots/settings.png) |
 
-### 🎨 Modern Design (Material 3)
-- **Dynamic Theme**: Beautiful Dark and Light modes.
-- **Responsive**: PC and Mobile optimized (currently Mobile focused).
-- **Animations**: Smooth transitions and interactive elements.
-
-## � Screenshots
-
-| Home Page | Article View | Settings |
-|:---:|:---:|:---:|
-| ![Home](assets/screenshots/home.png) | ![Article](assets/screenshots/article.png) | ![Settings](assets/screenshots/settings.png) |
-*(Add your screenshots in `assets/screenshots/`)*
-
-## 🚀 Getting Started
-
-### Prerequisites
-- Flutter SDK
-- Android Studio / VS Code
-
-### Installation
-
-1. **Clone the repository**
+## 🚀 Quick Start
+1. **Clone & Enter**
    ```bash
-   git clone https://github.com/yourusername/read.git
-   cd read
+   git clone https://github.com/birmehto/readora.git && cd readora
+   ```
+2. **Install & Run**
+   ```bash
+   flutter pub get && flutter run
    ```
 
-2. **Install dependencies**
-   ```bash
-   flutter pub get
-   ```
+## 🛠️ Tech
+- Flutter + GetX (State Management)
+- GetStorage (Local Data)
+- InAppWebView (Article Rendering)
 
-3. **Run the app**
-   ```bash
-   flutter run
-   ```
+## ☕ Support
+[![Buy Me a Coffee](https://img.shields.io/badge/Donation-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/birmehto)
 
-## 🛠️ Tech Stack
-
--   **Framework**: Flutter
--   **State Management**: GetX
--   **Local Storage**: GetStorage
--   **Web View**: flutter_inappwebview
--   **UI**: flutter_screenutil, expressive_loading_indicator
--   **Utilities**: url_launcher, share_plus, intl
-
-## � Platforms
-
--   ✅ **Android** (Primary)
--   ✅ **iOS** (Compatible)
-
-## 📄 License
-
-This project is licensed under the MIT License.
+## ⚖️ Legal & Credits
+- **Readora** is unofficial and not affiliated with **A Medium Corporation**.
+- Uses [Freedium](https://freedium.cfd) and [ReadMedium](https://readmedium.com).
+- Content belongs to original authors. MIT licensed.
 
 ---
-**Made with ❤️ for Readers**
+**Happy Reading!**

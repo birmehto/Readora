@@ -33,15 +33,6 @@ class ArticlePage extends GetView<ArticleController> {
           actions: [
             IconButton(
               icon: Icon(
-                controller.isSpeaking.value
-                    ? Icons.stop_circle_rounded
-                    : Icons.volume_up_rounded,
-              ),
-              tooltip: controller.isSpeaking.value ? 'Stop' : 'Read Aloud',
-              onPressed: controller.toggleTts,
-            ),
-            IconButton(
-              icon: Icon(
                 controller.isFavorite.value
                     ? Icons.favorite_rounded
                     : Icons.favorite_border_rounded,
