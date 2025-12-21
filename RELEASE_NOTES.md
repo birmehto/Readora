@@ -1,4 +1,4 @@
-# Release Notes - v1.0.1
+# Release Notes - v1.0.2
 
 ## 📖 Welcome to Readora!
 We are excited to announce the initial release of **Readora**, your minimalist, distraction-free Medium reader.

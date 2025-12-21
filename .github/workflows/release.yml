@@ -49,8 +49,7 @@ jobs:
           mv build/app/outputs/flutter-apk/app-x86_64-release.apk \
              release-apks/Readora-v${{ steps.version.outputs.version }}-x86_64.apk
 
-      - name: Build App Bundle
-        run: flutter build appbundle --release
+
 
       - name: Upload APKs
         uses: actions/upload-artifact@v4
@@ -58,11 +57,7 @@ jobs:
           name: apks
           path: release-apks/*.apk
 
-      - name: Upload AAB
-        uses: actions/upload-artifact@v4
-        with:
-          name: android-aab
-          path: build/app/outputs/bundle/release/app-release.aab
+
 
   release:
     needs: build-android
@@ -82,8 +77,6 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: |
             apks/*.apk
-            android-aab/app-release.aab
           generate_release_notes: true
           body_path: RELEASE_NOTES.md
