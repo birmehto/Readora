@@ -59,13 +59,20 @@ jobs:
           VERSION=$(grep '^version:' pubspec.yaml | cut -d ' ' -f2)
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Build APKs (split per ABI)
+      - name: Build Universal APK
+        run: flutter build apk --release
+
+      - name: Build Split APKs
         run: flutter build apk --release --split-per-abi
 
       - name: Rename APKs for release
         run: |
           mkdir release-apks
           VERSION=${{ steps.version.outputs.version }}
+          # Universal
+          cp build/app/outputs/flutter-apk/app-release.apk \
+             release-apks/Readora-v$VERSION-universal.apk
+          # Split
           mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk \
              release-apks/Readora-v$VERSION-arm64-v8a.apk
           mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk \
