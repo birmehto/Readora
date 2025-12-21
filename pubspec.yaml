@@ -1,4 +1,4 @@
-name: free
+name: readora
 description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0
@@ -10,23 +10,17 @@ dependencies:
   flutter:
     sdk: flutter
     
-  html: ^0.15.6
   url_launcher: ^6.3.2
-  webview_flutter: ^4.13.0
-  flutter_html: ^3.0.0
-  cached_network_image: ^3.3.0
+  flutter_inappwebview: ^6.0.0
   intl: ^0.20.2
   share_plus: ^12.0.1
   flutter_screenutil: ^5.9.3
   get: ^4.7.3
   get_storage: ^2.1.1
-  connectivity_plus: ^7.0.0
-  dio: ^5.4.0
-  equatable: ^2.0.5
-  logger: ^2.0.2+1
-  lottie: ^3.0.0
-  flutter_animate: ^4.5.0
-  google_fonts: ^6.3.3
+  expressive_loading_indicator: ^0.0.1
+  material_new_shapes: ^1.0.0
+  animations: ^2.1.1
+
   
 
 dev_dependencies:
