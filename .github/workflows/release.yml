@@ -2,54 +2,61 @@ name: Release
 
 on:
   push:
-    branches: [release]
+    tags:
+      - "v*"
   workflow_dispatch:
 
 jobs:
   build-android:
-    name: Build Android APKs (Split per ABI)
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v4
 
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          distribution: 'temurin'
-          java-version: '17'
+          distribution: temurin
+          java-version: 17
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: 'stable'
+          channel: stable
           cache: true
 
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Build APKs (Split per ABI)
+      - name: Get version from pubspec.yaml
+        id: version
+        run: |
+          VERSION=$(grep '^version:' pubspec.yaml | cut -d ' ' -f2)
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Build APKs (split per ABI)
         run: flutter build apk --release --split-per-abi
+
+      - name: Rename APKs with version & architecture
+        run: |
+          mkdir release-apks
+          mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk \
+             release-apks/Readora-v${{ steps.version.outputs.version }}-arm64-v8a.apk
+
+          mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk \
+             release-apks/Readora-v${{ steps.version.outputs.version }}-armeabi-v7a.apk
+
+          mv build/app/outputs/flutter-apk/app-x86_64-release.apk \
+             release-apks/Readora-v${{ steps.version.outputs.version }}-x86_64.apk
 
       - name: Build App Bundle
         run: flutter build appbundle --release
 
-      - name: Upload APK arm64-v8a
+      - name: Upload APKs
         uses: actions/upload-artifact@v4
         with:
-          name: apk-arm64-v8a
-          path: build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-
-      - name: Upload APK armeabi-v7a
-        uses: actions/upload-artifact@v4
-        with:
-          name: apk-armeabi-v7a
-          path: build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-
-      - name: Upload APK x86_64
-        uses: actions/upload-artifact@v4
-        with:
-          name: apk-x86_64
-          path: build/app/outputs/flutter-apk/app-x86_64-release.apk
+          name: apks
+          path: release-apks/*.apk
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
@@ -57,30 +64,20 @@ jobs:
           name: android-aab
           path: build/app/outputs/bundle/release/app-release.aab
 
-  create-release:
-    name: Create GitHub Release
-    needs: [build-android]
+  release:
+    needs: build-android
     runs-on: ubuntu-latest
     permissions:
       contents: write
+
     steps:
-      - name: Download all artifacts
+      - name: Download artifacts
         uses: actions/download-artifact@v4
 
-      - name: Get version from pubspec
-        id: version
-        run: |
-          echo "version=$(date +'%Y.%m.%d-%H%M')" >> $GITHUB_OUTPUT
-
-      - name: Create Release
+      - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: v${{ steps.version.outputs.version }}
-          name: Release ${{ steps.version.outputs.version }}
           files: |
-            apk-arm64-v8a/app-arm64-v8a-release.apk
-            apk-armeabi-v7a/app-armeabi-v7a-release.apk
-            apk-x86_64/app-x86_64-release.apk
+            apks/*.apk
             android-aab/app-release.aab
           generate_release_notes: true
-          draft: false
