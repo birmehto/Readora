@@ -2,13 +2,13 @@ name: CI
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main, dev]
   pull_request:
     branches: [main]
 
 jobs:
-  analyze:
-    name: Analyze & Test
+  validate:
+    name: Validate Code
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
