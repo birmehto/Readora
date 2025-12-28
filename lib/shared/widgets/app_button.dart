@@ -18,6 +18,7 @@ class AppButton extends StatelessWidget {
     this.foregroundColor,
     this.width,
   });
+
   final String text;
   final VoidCallback onPressed;
   final AppButtonVariant variant;
@@ -29,58 +30,60 @@ class AppButton extends StatelessWidget {
   final Color? foregroundColor;
   final double? width;
 
+  bool get _disabled => isDisabled || isLoading;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
+    final scheme = theme.colorScheme;
+    final sizeCfg = _sizeConfig;
+    final colors = _colors(scheme);
 
-    // Size configurations
-    final sizeConfig = _getSizeConfig();
+    final child = _buildContent(theme, colors.foregroundColor, sizeCfg);
 
-    // Color configurations
-    final colors = _getColors(colorScheme);
-
-    final Widget buttonChild = _buildButtonContent(theme);
+    final VoidCallback? action = _disabled ? null : onPressed;
 
     Widget button = switch (variant) {
       AppButtonVariant.filled => FilledButton(
-        onPressed: _getOnPressed(),
+        onPressed: action,
         style: FilledButton.styleFrom(
           backgroundColor: colors.backgroundColor,
           foregroundColor: colors.foregroundColor,
-          minimumSize: Size(width ?? sizeConfig.minWidth, sizeConfig.height),
-          padding: sizeConfig.padding,
+          minimumSize: Size(width ?? sizeCfg.minWidth, sizeCfg.height),
+          padding: sizeCfg.padding,
+          disabledBackgroundColor: scheme.onSurface.withValues(alpha: 0.12),
+          disabledForegroundColor: scheme.onSurface.withValues(alpha: 0.38),
         ),
-        child: buttonChild,
+        child: child,
       ),
       AppButtonVariant.outlined => OutlinedButton(
-        onPressed: _getOnPressed(),
+        onPressed: action,
         style: OutlinedButton.styleFrom(
           foregroundColor: colors.foregroundColor,
           side: BorderSide(color: colors.borderColor),
-          minimumSize: Size(width ?? sizeConfig.minWidth, sizeConfig.height),
-          padding: sizeConfig.padding,
+          minimumSize: Size(width ?? sizeCfg.minWidth, sizeCfg.height),
+          padding: sizeCfg.padding,
         ),
-        child: buttonChild,
+        child: child,
       ),
       AppButtonVariant.text => TextButton(
-        onPressed: _getOnPressed(),
+        onPressed: action,
         style: TextButton.styleFrom(
           foregroundColor: colors.foregroundColor,
-          minimumSize: Size(width ?? sizeConfig.minWidth, sizeConfig.height),
-          padding: sizeConfig.padding,
+          minimumSize: Size(width ?? sizeCfg.minWidth, sizeCfg.height),
+          padding: sizeCfg.padding,
         ),
-        child: buttonChild,
+        child: child,
       ),
       AppButtonVariant.elevated => ElevatedButton(
-        onPressed: _getOnPressed(),
+        onPressed: action,
         style: ElevatedButton.styleFrom(
           backgroundColor: colors.backgroundColor,
           foregroundColor: colors.foregroundColor,
-          minimumSize: Size(width ?? sizeConfig.minWidth, sizeConfig.height),
-          padding: sizeConfig.padding,
+          minimumSize: Size(width ?? sizeCfg.minWidth, sizeCfg.height),
+          padding: sizeCfg.padding,
         ),
-        child: buttonChild,
+        child: child,
       ),
     };
 
@@ -91,40 +94,41 @@ class AppButton extends StatelessWidget {
     return button;
   }
 
-  VoidCallback? _getOnPressed() {
-    if (isDisabled || isLoading) return null;
-    return onPressed;
-  }
+  // ---------- Content ----------
 
-  Widget _buildButtonContent(ThemeData theme) {
+  Widget _buildContent(
+    ThemeData theme,
+    Color foreground,
+    _ButtonSizeConfig size,
+  ) {
     if (isLoading) {
       return SizedBox(
-        height: _getSizeConfig().iconSize,
-        width: _getSizeConfig().iconSize,
+        width: size.iconSize,
+        height: size.iconSize,
         child: CircularProgressIndicator(
           strokeWidth: 2,
-          valueColor: AlwaysStoppedAnimation<Color>(
-            foregroundColor ?? theme.colorScheme.onPrimary,
-          ),
+          valueColor: AlwaysStoppedAnimation(foreground),
         ),
       );
     }
 
-    if (icon != null) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: _getSizeConfig().iconSize),
-          const SizedBox(width: 8),
-          Text(text, style: _getSizeConfig().textStyle),
-        ],
-      );
+    if (icon == null) {
+      return Text(text, style: size.textStyle);
     }
 
-    return Text(text, style: _getSizeConfig().textStyle);
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: size.iconSize),
+        const SizedBox(width: 8),
+        Text(text, style: size.textStyle),
+      ],
+    );
   }
 
-  _ButtonSizeConfig _getSizeConfig() {
+  // ---------- Size ----------
+
+  _ButtonSizeConfig get _sizeConfig {
     return switch (size) {
       AppButtonSize.small => const _ButtonSizeConfig(
         height: 32,
@@ -145,42 +149,46 @@ class AppButton extends StatelessWidget {
         minWidth: 96,
         padding: EdgeInsets.symmetric(horizontal: 20),
         iconSize: 20,
-        textStyle: TextStyle(fontSize: 16),
+        textStyle: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       ),
     };
   }
 
-  _ButtonColors _getColors(ColorScheme colorScheme) {
-    final defaultColors = switch (variant) {
+  // ---------- Colors ----------
+
+  _ButtonColors _colors(ColorScheme c) {
+    final base = switch (variant) {
       AppButtonVariant.filled => _ButtonColors(
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
-        borderColor: colorScheme.primary,
+        backgroundColor: c.primary,
+        foregroundColor: c.onPrimary,
+        borderColor: c.primary,
       ),
       AppButtonVariant.outlined => _ButtonColors(
         backgroundColor: Colors.transparent,
-        foregroundColor: colorScheme.primary,
-        borderColor: colorScheme.outline,
+        foregroundColor: c.primary,
+        borderColor: c.outlineVariant,
       ),
       AppButtonVariant.text => _ButtonColors(
         backgroundColor: Colors.transparent,
-        foregroundColor: colorScheme.primary,
+        foregroundColor: c.primary,
         borderColor: Colors.transparent,
       ),
       AppButtonVariant.elevated => _ButtonColors(
-        backgroundColor: colorScheme.surface,
-        foregroundColor: colorScheme.primary,
+        backgroundColor: c.surfaceContainerHighest,
+        foregroundColor: c.primary,
         borderColor: Colors.transparent,
       ),
     };
 
     return _ButtonColors(
-      backgroundColor: backgroundColor ?? defaultColors.backgroundColor,
-      foregroundColor: foregroundColor ?? defaultColors.foregroundColor,
-      borderColor: defaultColors.borderColor,
+      backgroundColor: backgroundColor ?? base.backgroundColor,
+      foregroundColor: foregroundColor ?? base.foregroundColor,
+      borderColor: base.borderColor,
     );
   }
 }
+
+// ---------- Internals ----------
 
 class _ButtonSizeConfig {
   const _ButtonSizeConfig({
@@ -190,6 +198,7 @@ class _ButtonSizeConfig {
     required this.iconSize,
     required this.textStyle,
   });
+
   final double height;
   final double minWidth;
   final EdgeInsets padding;
@@ -203,6 +212,7 @@ class _ButtonColors {
     required this.foregroundColor,
     required this.borderColor,
   });
+
   final Color backgroundColor;
   final Color foregroundColor;
   final Color borderColor;

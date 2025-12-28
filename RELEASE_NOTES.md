@@ -1,17 +1,18 @@
-# Release Notes - v1.0.1
+# Release Notes - v1.0.2
 
 ## 📖 Welcome to Readora!
-We are excited to announce the initial release of **Readora**, your minimalist, distraction-free Medium reader.
+We are excited to share some fresh updates to **Readora**, your minimalist, distraction-free Medium reader.
 
-## ✨ Features
+## ✨ Recent Refinements
+- **🎨 Refined Typography**: Sleeker, more balanced App Bar headers across the app for a premium feel.
+- **📱 Optimized Favorites**: A cleaner, more spacious layout for your saved articles.
+- **🧹 Simplified UI**: Streamlined article previews by focusing on the essential information you care about.
+
+## 🚀 Key Features
 - **🔓 Bypass Paywalls**: Read premium Medium articles instantly.
 - **🔗 Smart Link Handling**: Support for all Medium domains and publications.
-- **🧹 Clean Reading UI**: No ads or clutter, just the content you want.
 - **📚 Reading History**: Automatically keep track of everything you've read.
-- **🎨 Personalized Experience**:
-  - Full Dark Mode support.
-  - Adjustable font sizes and styles.
-- **⚡ Built with Flutter**: Smooth animations and Material 3 Expressive design.
+- **🌈 Personalized Experience**: Full Dark Mode support with adjustable text settings.
 
-## 🚀 Getting Started
+## ⚡ Getting Started
 Simply paste a Medium link or share it directly to Readora to start reading!

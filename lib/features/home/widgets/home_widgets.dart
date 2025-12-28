@@ -1,28 +1,4 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
-
-class HomeBackground extends StatelessWidget {
-  const HomeBackground({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final colorScheme = theme.colorScheme;
-
-    return Positioned.fill(child: Container(color: colorScheme.surface));
-  }
-}
-
-class GlowCircle extends StatelessWidget {
-  const GlowCircle({super.key, required this.color, required this.size});
-  final Color color;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    return const SizedBox.shrink();
-  }
-}
 
 class HomeHeaderIcon extends StatelessWidget {
   const HomeHeaderIcon({super.key});
@@ -42,15 +18,15 @@ class HomeHeaderIcon extends StatelessWidget {
             end: Alignment.bottomRight,
             colors: [
               theme.colorScheme.primary,
-              Color.lerp(theme.colorScheme.primary, Colors.indigo, 0.3)!,
+              Color.lerp(theme.colorScheme.primary, Colors.indigo, 0.9)!,
               theme.colorScheme.secondary,
             ],
           ),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.1),
+              color: Colors.black12,
               blurRadius: 10,
-              offset: const Offset(0, 4),
+              offset: Offset(0, 4),
             ),
           ],
         ),
@@ -65,8 +41,8 @@ class HomeHeaderIcon extends StatelessWidget {
 }
 
 class ScaleIn extends StatefulWidget {
+  const ScaleIn({required this.child, super.key});
   final Widget child;
-  const ScaleIn({super.key, required this.child});
 
   @override
   State<ScaleIn> createState() => _ScaleInState();

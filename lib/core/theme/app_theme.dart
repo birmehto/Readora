@@ -9,21 +9,7 @@ class AppTheme {
       surface: const Color(0xFFF8FAF9),
     ),
     scaffoldBackgroundColor: const Color(0xFFF8FAF9),
-    appBarTheme: const AppBarTheme(
-      centerTitle: false,
-      scrolledUnderElevation: 0,
-      backgroundColor: Colors.transparent,
-      surfaceTintColor: Colors.transparent,
-      elevation: 0,
-      titleTextStyle: TextStyle(
-        fontFamily: 'Inter',
-        fontSize: 28,
-        fontWeight: FontWeight.w900,
-        color: Color(0xFF191C1C),
-        letterSpacing: -0.5,
-      ),
-      iconTheme: IconThemeData(size: 24, color: Color(0xFF191C1C)),
-    ),
+
     cardTheme: CardThemeData(
       elevation: 0,
       shape: RoundedRectangleBorder(
@@ -61,6 +47,21 @@ class AppTheme {
         elevation: 0,
       ),
     ),
+    appBarTheme: const AppBarTheme(
+      centerTitle: false,
+      scrolledUnderElevation: 0,
+      backgroundColor: Colors.transparent,
+      surfaceTintColor: Colors.transparent,
+      elevation: 0,
+      titleTextStyle: TextStyle(
+        fontFamily: 'Inter',
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
+        color: Color(0xFF191C1C),
+        letterSpacing: -0.2,
+      ),
+      iconTheme: IconThemeData(size: 24, color: Color(0xFF191C1C)),
+    ),
   );
 
   static final darkTheme = ThemeData(
@@ -80,10 +81,10 @@ class AppTheme {
       elevation: 0,
       titleTextStyle: TextStyle(
         fontFamily: 'Inter',
-        fontSize: 28,
-        fontWeight: FontWeight.w900,
+        fontSize: 20,
+        fontWeight: FontWeight.w700,
         color: Color(0xFFE1E3E3),
-        letterSpacing: -0.5,
+        letterSpacing: -0.2,
       ),
       iconTheme: IconThemeData(size: 24, color: Color(0xFFE1E3E3)),
     ),
