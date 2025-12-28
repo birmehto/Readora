@@ -1,317 +1,277 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../shared/widgets/app_appbar.dart';
-import '../../../shared/widgets/app_dialogs.dart';
-import '../../../shared/widgets/app_scaffold.dart';
 import '../controllers/settings_controller.dart';
+import '../../home/widgets/home_widgets.dart';
 
 class SettingsPage extends GetView<SettingsController> {
   const SettingsPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return AppScaffold(
-      appBar: const AppAppBar(title: 'Settings'),
-      body: ListView(
-        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      body: Stack(
         children: [
-          _buildSectionHeader(context, 'Appearance'),
-          _buildCard(
-            context,
-            children: [
-              Obx(
-                () => SwitchListTile(
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 4,
-                  ),
-                  secondary: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.secondaryContainer,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Icon(
-                      controller.isDarkMode.value
-                          ? Icons.dark_mode_rounded
-                          : Icons.light_mode_rounded,
-                      color: Theme.of(context).colorScheme.onSecondaryContainer,
-                    ),
-                  ),
-                  title: const Text('Dark Mode'),
-                  subtitle: const Text('Use dark theme for app and articles'),
-                  value: controller.isDarkMode.value,
-                  onChanged: controller.toggleTheme,
-                ),
+          const HomeBackground(),
+          CustomScrollView(
+            slivers: [
+              const SliverAppBar.medium(
+                title: Text('Settings'),
+                backgroundColor: Colors.transparent,
+                surfaceTintColor: Colors.transparent,
               ),
-            ],
-          ),
-
-          _buildSectionHeader(context, 'Reading Preferences'),
-          _buildCard(
-            context,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 8,
+                ),
+                sliver: SliverList(
+                  delegate: SliverChildListDelegate([
+                    _buildSectionHeader(context, 'Appearance'),
+                    _buildCard(
+                      context,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.all(8),
-                          decoration: BoxDecoration(
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.primaryContainer,
-                            borderRadius: BorderRadius.circular(12),
+                        Obx(
+                          () => SwitchListTile(
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 4,
+                            ),
+                            secondary: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: theme.colorScheme.secondaryContainer,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                controller.isDarkMode.value
+                                    ? Icons.dark_mode_rounded
+                                    : Icons.light_mode_rounded,
+                                color: theme.colorScheme.onSecondaryContainer,
+                              ),
+                            ),
+                            title: const Text('Dark Mode'),
+                            subtitle: const Text(
+                              'Use dark theme for app and articles',
+                            ),
+                            value: controller.isDarkMode.value,
+                            onChanged: controller.toggleTheme,
                           ),
-                          child: Icon(
-                            Icons.text_fields_rounded,
-                            color: Theme.of(
-                              context,
-                            ).colorScheme.onPrimaryContainer,
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Text(
-                          'Font Size',
-                          style: Theme.of(context).textTheme.titleMedium,
                         ),
                       ],
                     ),
-                    const SizedBox(height: 8),
-                    Obx(
-                      () => Row(
-                        children: [
-                          const Text('A', style: TextStyle(fontSize: 14)),
-                          Expanded(
-                            child: Slider(
-                              value: controller.fontSize.value,
-                              min: 14.0,
-                              max: 24.0,
-                              divisions: 10,
-                              label: controller.fontSize.value
-                                  .round()
-                                  .toString(),
-                              onChanged: controller.updateFontSize,
+
+                    _buildSectionHeader(context, 'Reading Preferences'),
+                    _buildCard(
+                      context,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Row(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.all(8),
+                                    decoration: BoxDecoration(
+                                      color: theme.colorScheme.primaryContainer,
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Icon(
+                                      Icons.text_fields_rounded,
+                                      color:
+                                          theme.colorScheme.onPrimaryContainer,
+                                    ),
+                                  ),
+                                  const SizedBox(width: 16),
+                                  Text(
+                                    'Font Size',
+                                    style: theme.textTheme.titleMedium,
+                                  ),
+                                ],
+                              ),
+                              const SizedBox(height: 8),
+                              Obx(
+                                () => Row(
+                                  children: [
+                                    const Text(
+                                      'A',
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                    Expanded(
+                                      child: Slider(
+                                        value: controller.fontSize.value,
+                                        min: 14.0,
+                                        max: 24.0,
+                                        divisions: 10,
+                                        label: controller.fontSize.value
+                                            .round()
+                                            .toString(),
+                                        onChanged: controller.updateFontSize,
+                                      ),
+                                    ),
+                                    const Text(
+                                      'A',
+                                      style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Divider(height: 1, indent: 16, endIndent: 16),
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.tertiaryContainer,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.font_download_rounded,
+                              color: theme.colorScheme.onTertiaryContainer,
                             ),
                           ),
-                          const Text(
-                            'A',
-                            style: TextStyle(
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
+                          title: const Text('Font Family'),
+                          trailing: Obx(
+                            () => DropdownButtonHideUnderline(
+                              child: DropdownButton<String>(
+                                value: controller.fontFamily.value,
+                                items: const [
+                                  DropdownMenuItem(
+                                    value: 'Inter',
+                                    child: Text('Inter'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Merriweather',
+                                    child: Text('Serif'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Roboto',
+                                    child: Text('Roboto'),
+                                  ),
+                                  DropdownMenuItem(
+                                    value: 'Lora',
+                                    child: Text('Lora'),
+                                  ),
+                                ],
+                                onChanged: (val) {
+                                  if (val != null)
+                                    controller.updateFontFamily(val);
+                                },
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              const Divider(height: 1, indent: 16, endIndent: 16),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.tertiaryContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.font_download_rounded,
-                    color: Theme.of(context).colorScheme.onTertiaryContainer,
-                  ),
-                ),
-                title: const Text('Font Family'),
-                trailing: Obx(
-                  () => DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: controller.fontFamily.value,
-                      items: const [
-                        DropdownMenuItem(value: 'Inter', child: Text('Inter')),
-                        DropdownMenuItem(
-                          value: 'Merriweather',
-                          child: Text('Serif'),
                         ),
-                        DropdownMenuItem(
-                          value: 'Roboto',
-                          child: Text('Roboto'),
-                        ),
-                        DropdownMenuItem(value: 'Lora', child: Text('Lora')),
                       ],
-                      onChanged: (val) {
-                        if (val != null) controller.updateFontFamily(val);
-                      },
                     ),
-                  ),
+
+                    _buildSectionHeader(context, 'Support'),
+                    _buildCard(
+                      context,
+                      children: [
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 8,
+                          ),
+                          leading: Container(
+                            padding: const EdgeInsets.all(8),
+                            decoration: BoxDecoration(
+                              color: Colors.amber.shade100,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              Icons.coffee_rounded,
+                              color: Colors.amber.shade800,
+                            ),
+                          ),
+                          title: const Text('Buy Me a Coffee'),
+                          subtitle: const Text('Support the developer'),
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: controller.openDonationLink,
+                        ),
+                        const Divider(height: 1, indent: 16, endIndent: 16),
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 4,
+                          ),
+                          leading: const Icon(Icons.star_rate_rounded),
+                          title: const Text('Rate App'),
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: controller.rateApp,
+                        ),
+                        const Divider(height: 1, indent: 16, endIndent: 16),
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 4,
+                          ),
+                          leading: const Icon(Icons.mail_outline_rounded),
+                          title: const Text('Send Feedback'),
+                          trailing: const Icon(Icons.chevron_right_rounded),
+                          onTap: controller.sendFeedback,
+                        ),
+                      ],
+                    ),
+
+                    _buildSectionHeader(context, 'About'),
+                    _buildCard(
+                      context,
+                      children: [
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 4,
+                          ),
+                          leading: const Icon(Icons.info_outline_rounded),
+                          title: const Text('Version'),
+                          trailing: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 4,
+                            ),
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.surfaceContainerHigh,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Text(
+                              '1.0.0',
+                              style: theme.textTheme.labelMedium,
+                            ),
+                          ),
+                        ),
+                        const Divider(height: 1, indent: 16, endIndent: 16),
+                        ListTile(
+                          contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 4,
+                          ),
+                          leading: const Icon(Icons.gavel_rounded),
+                          title: const Text('Licenses & Credits'),
+                          onTap: () => _showCreditsDialog(context),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 48),
+                  ]),
                 ),
               ),
             ],
           ),
-
-          _buildSectionHeader(context, 'Support'),
-          _buildCard(
-            context,
-            children: [
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.shade100,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.coffee_rounded,
-                    color: Colors.amber.shade800,
-                  ),
-                ),
-                title: const Text('Buy Me a Coffee'),
-                subtitle: const Text('Support the developer'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: controller.openDonationLink,
-              ),
-              const Divider(height: 1, indent: 16, endIndent: 16),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                leading: const Icon(Icons.star_rate_rounded),
-                title: const Text('Rate App'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: controller.rateApp,
-              ),
-              const Divider(height: 1, indent: 16, endIndent: 16),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                leading: const Icon(Icons.mail_outline_rounded),
-                title: const Text('Send Feedback'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: controller.sendFeedback,
-              ),
-            ],
-          ),
-
-          _buildSectionHeader(context, 'Legal'),
-          _buildCard(
-            context,
-            children: [
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                leading: const Icon(Icons.privacy_tip_outlined),
-                title: const Text('Privacy Policy'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: controller.openPrivacyPolicy,
-              ),
-              const Divider(height: 1, indent: 16, endIndent: 16),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                leading: const Icon(Icons.description_outlined),
-                title: const Text('Terms of Service'),
-                trailing: const Icon(Icons.chevron_right_rounded),
-                onTap: controller.openTermsOfService,
-              ),
-            ],
-          ),
-
-          _buildSectionHeader(context, 'Storage'),
-          _buildCard(
-            context,
-            children: [
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                title: const Text('Clear History'),
-                subtitle: const Text('Remove all reading history'),
-                leading: Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.errorContainer,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Icon(
-                    Icons.delete_forever_rounded,
-                    color: Theme.of(context).colorScheme.onErrorContainer,
-                  ),
-                ),
-                onTap: () => _confirmClearHistory(context),
-              ),
-            ],
-          ),
-
-          _buildSectionHeader(context, 'About'),
-          _buildCard(
-            context,
-            children: [
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                leading: const Icon(Icons.info_outline_rounded),
-                title: const Text('Version'),
-                trailing: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 4,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surfaceContainerHigh,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '1.0.0',
-                    style: Theme.of(context).textTheme.labelMedium,
-                  ),
-                ),
-              ),
-              const Divider(height: 1, indent: 16, endIndent: 16),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                leading: const Icon(Icons.code_rounded),
-                title: const Text('Developer'),
-                subtitle: const Text('Made with ❤️ in Flutter'),
-                onTap:
-                    controller.openDonationLink, // Linking to donation/social
-              ),
-              const Divider(height: 1, indent: 16, endIndent: 16),
-              ListTile(
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 4,
-                ),
-                leading: const Icon(Icons.gavel_rounded),
-                title: const Text('Licenses & Credits'),
-                onTap: () => _showCreditsDialog(context),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 48),
         ],
       ),
     );
@@ -360,35 +320,18 @@ class SettingsPage extends GetView<SettingsController> {
   }
 
   Widget _buildCard(BuildContext context, {required List<Widget> children}) {
+    final theme = Theme.of(context);
     return Card(
       elevation: 0,
       margin: EdgeInsets.zero,
-      color: Theme.of(
-        context,
-      ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
+      color: theme.colorScheme.surface,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(24),
         side: BorderSide(
-          color: Theme.of(
-            context,
-          ).colorScheme.outlineVariant.withValues(alpha: 0.2),
+          color: theme.colorScheme.outlineVariant.withValues(alpha: 0.3),
         ),
       ),
       child: Column(children: children),
-    );
-  }
-
-  void _confirmClearHistory(BuildContext context) {
-    AppDialogs.showConfirmDialog(
-      title: 'Clear History',
-      message:
-          'Are you sure you want to delete all reading history? This action cannot be undone.',
-      confirmText: 'Clear All',
-      isDestructive: true,
-      onConfirm: () {
-        controller.clearHistory();
-        Get.back();
-      },
     );
   }
 
@@ -396,11 +339,11 @@ class SettingsPage extends GetView<SettingsController> {
     return Padding(
       padding: const EdgeInsets.fromLTRB(8, 24, 8, 12),
       child: Text(
-        title,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+        title.toUpperCase(),
+        style: Theme.of(context).textTheme.labelSmall?.copyWith(
           color: Theme.of(context).colorScheme.primary,
-          fontWeight: FontWeight.bold,
-          letterSpacing: 1.0,
+          fontWeight: FontWeight.w900,
+          letterSpacing: 2.0,
         ),
       ),
     );

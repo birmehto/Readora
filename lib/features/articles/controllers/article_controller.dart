@@ -86,15 +86,6 @@ class ArticleController extends GetxController {
     isLoading.value = false;
     isInitialLoad.value = false;
     loadingProgress.value = 1.0;
-
-    // Add to history
-    _storage.addToHistory({
-      'title': articleTitle,
-      'url': originalUrl.value.isNotEmpty
-          ? originalUrl.value
-          : currentUrl.value,
-      'visitedAt': DateTime.now().toIso8601String(),
-    });
   }
 
   /// Handle server errors (502, 503, etc.)
@@ -237,6 +228,8 @@ class ArticleController extends GetxController {
         'title': articleTitle,
         'url': url,
         'visitedAt': DateTime.now().toIso8601String(),
+        'domain': articleDomain,
+        'author': articleAuthor,
       });
       isFavorite.value = true;
     }
@@ -277,6 +270,36 @@ class ArticleController extends GetxController {
           .join(' ');
     }
     return 'Article';
+  }
+
+  String? get articleDomain {
+    final uri = Uri.tryParse(originalUrl.value);
+    if (uri != null) {
+      String host = uri.host;
+      if (host.startsWith('www.')) host = host.substring(4);
+      return host;
+    }
+    return null;
+  }
+
+  String? get articleAuthor {
+    final uri = Uri.tryParse(originalUrl.value);
+    if (uri != null && uri.pathSegments.isNotEmpty) {
+      final firstSegment = uri.pathSegments.first;
+      if (firstSegment.startsWith('@')) {
+        return firstSegment
+            .substring(1)
+            .replaceAll('-', ' ')
+            .split(' ')
+            .map(
+              (word) => word.isNotEmpty
+                  ? '${word[0].toUpperCase()}${word.substring(1)}'
+                  : word,
+            )
+            .join(' ');
+      }
+    }
+    return null;
   }
 
   bool get isFreediumUrl => currentUrl.value.contains('freedium');

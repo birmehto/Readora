@@ -157,7 +157,7 @@ class UrlValidator {
     String targetUrl = cleanUrl(articleUrl) ?? articleUrl;
 
     // Strip existing Freedium or ReadMedium prefixes to prevent double-prefixing
-    // and to fix any already corrupted URLs in history
+    // and to fix any already corrupted URLs in favorites
     final prefixes = [
       '${MediumConstants.freediumUrl}/',
       'https://freedium.cfd/',

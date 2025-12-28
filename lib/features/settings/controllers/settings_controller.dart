@@ -103,8 +103,4 @@ class SettingsController extends GetxController {
   Future<void> rateApp() async {
     await openPlayStore();
   }
-
-  Future<void> clearHistory() async {
-    await _storage.clearHistory();
-  }
 }
