@@ -47,7 +47,4 @@ class FavoritesController extends GetxController {
     searchQuery.value = query;
   }
 
-  void clearSearch() {
-    searchQuery.value = '';
-  }
 }

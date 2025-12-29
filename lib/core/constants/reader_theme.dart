@@ -12,6 +12,10 @@ class ReaderTheme {
     return '''
       @import url('$fontUrl');
 
+      html {
+        ${isDarkMode ? 'background-color: #1a1c1e !important;' : 'background-color: #fdfcff !important;'}
+      }
+
       body {
         font-family: '$fontFamily', $fallback !important;
         font-size: ${fontSize}px !important;
@@ -28,6 +32,21 @@ class ReaderTheme {
           color: #1a1c1e !important;
         '''}
       }
+
+      /* Force inheritance for common text containers */
+      div, p, span, li, blockquote, dt, dd {
+        font-size: inherit !important;
+        line-height: inherit !important;
+        font-family: inherit !important;
+        color: inherit !important;
+      }
+
+      /* Relative scaling for headers */
+      h1 { font-size: 2.0em !important; }
+      h2 { font-size: 1.5em !important; }
+      h3 { font-size: 1.25em !important; }
+      h4 { font-size: 1.1em !important; }
+      h5, h6 { font-size: 1.0em !important; }
 
       /* Aggressive Theme Reset */
       body * {

@@ -238,7 +238,7 @@ class ArticleController extends GetxController {
   // ---------- Reader Settings ----------
 
   void updateFontSize(double size) {
-    fontSize.value = size.clamp(14, 24);
+    fontSize.value = size.clamp(14, 28);
     _storage.fontSize = fontSize.value;
   }
 

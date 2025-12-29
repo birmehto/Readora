@@ -1,41 +1,41 @@
 # 📖 Readora
 
-**Readora** is a minimalist app to read Medium articles distraction-free and without paywalls.
+Read Medium articles without paywalls, ads, or distractions.
 
-## ✨ Features
-- � **Bypass Paywalls**: Read premium articles instantly via Freedium/ReadMedium.
-- 🔗 **Smart Links**: Handles all Medium domains, subdomains, and publications.
-- 🧹 **Clean UI**: No ads, no clutter, just content.
-- 🎨 **Customizable**: Change fonts, sizes, and switch to Dark Mode.
-- 📚 **History**: Automatically saves what you've read.
+## Why Readora?
 
-## 📸 Screenshots
-| Home | Reader | History | Settings |
-|:---:|:---:|:---:|:---:|
-| ![Home](screenshots/home.png) | ![Article](screenshots/article.png) | ![History](screenshots/history.png) | ![Settings](screenshots/settings.png) |
+- **🔓 No paywalls** — Access any Medium article freely
+- **🧘 Zero clutter** — Clean reading experience with no ads or popups
+- **🎨 Your style** — Customize fonts, spacing, and dark mode
+- **⭐ Save favorites** — Bookmark articles you want to revisit
 
-## 🚀 Quick Start
-1. **Clone & Enter**
-   ```bash
-   git clone https://github.com/birmehto/readora.git && cd readora
-   ```
-2. **Install & Run**
-   ```bash
-   flutter pub get && flutter run
-   ```
+Works with all Medium links — publications, custom domains, everything.
 
-## 🛠️ Tech
-- Flutter + GetX (State Management)
-- GetStorage (Local Data)
-- InAppWebView (Article Rendering)
+## Get Started
+```bash
+git clone https://github.com/birmehto/readora.git
+cd readora
+flutter pub get
+flutter run
+```
 
-## ☕ Support
-[![Buy Me a Coffee](https://img.shields.io/badge/Donation-FFDD00?style=for-the-badge&logo=buy-me-a-coffee&logoColor=black)](https://buymeacoffee.com/birmehto)
+## Screenshots
 
-## ⚖️ Legal & Credits
-- **Readora** is unofficial and not affiliated with **A Medium Corporation**.
-- Uses [Freedium](https://freedium.cfd) and [ReadMedium](https://readmedium.com).
-- Content belongs to original authors. MIT licensed.
+<p align="center">
+  <img src="screenshots/home.png" width="200" alt="Home"/>
+  <img src="screenshots/article.png" width="200" alt="Article"/>
+  <img src="screenshots/favorites.png" width="200" alt="Favorites"/>
+  <img src="screenshots/settings.png" width="200" alt="Settings"/>
+</p>
+
+## Support
+
+Like Readora? [Buy me a coffee ☕](https://buymeacoffee.com/birmehto)
+
+## Legal
+
+Independent open-source project. Not affiliated with Medium. Uses [Freedium](https://freedium.cfd) for article access. All content © original authors. [MIT License](LICENSE).
 
 ---
-**Happy Reading!**
+
+**Read more. Scroll less. Stay focused.** 📚

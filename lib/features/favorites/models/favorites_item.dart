@@ -25,12 +25,5 @@ class FavoriteItem {
   final String? domain;
   final String? imageUrl;
 
-  Map<String, dynamic> toJson() => {
-    'title': title,
-    'url': url,
-    'visitedAt': visitedAt.toIso8601String(),
-    'author': author,
-    'domain': domain,
-    'imageUrl': imageUrl,
-  };
+
 }

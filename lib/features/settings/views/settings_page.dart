@@ -58,7 +58,7 @@ class SettingsPage extends GetView<SettingsController> {
                       leading: _iconBox(
                         theme,
                         Icons.coffee_rounded,
-                        Colors.amber.shade100,
+                        theme.colorScheme.secondaryContainer,
                       ),
                       title: const Text('Buy Me a Coffee'),
                       subtitle: const Text('Support the developer'),

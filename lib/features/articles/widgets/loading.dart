@@ -15,10 +15,10 @@ class AppLoading extends StatelessWidget {
         height: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
-          color: context.colorScheme.primaryContainer,
+          color: context.colors.primaryContainer,
         ),
         child: ExpressiveLoadingIndicator(
-          color: context.colorScheme.primary,
+          color: context.colors.primary,
           polygons: [
             MaterialShapes.softBurst,
             MaterialShapes.pill,

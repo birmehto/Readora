@@ -1,77 +1,105 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 
-extension ContextExtensions on BuildContext {
-  // Theme shortcuts
+extension ContextX on BuildContext {
+  // ─────────────────────────────────────────────────────
+  // THEME
+  // ─────────────────────────────────────────────────────
+
   ThemeData get theme => Theme.of(this);
-  ColorScheme get colorScheme => theme.colorScheme;
-  TextTheme get textTheme => theme.textTheme;
+  ColorScheme get colors => theme.colorScheme;
+  TextTheme get text => theme.textTheme;
+  Brightness get brightness => theme.brightness;
+  bool get isDark => brightness == Brightness.dark;
+  bool get isLight => brightness == Brightness.light;
 
-  // MediaQuery shortcuts
-  MediaQueryData get mediaQuery => MediaQuery.of(this);
-  Size get screenSize => mediaQuery.size;
-  double get screenWidth => screenSize.width;
-  double get screenHeight => screenSize.height;
-  EdgeInsets get padding => mediaQuery.padding;
-  EdgeInsets get viewInsets => mediaQuery.viewInsets;
-  double get devicePixelRatio => mediaQuery.devicePixelRatio;
+  // ─────────────────────────────────────────────────────
+  // MEDIA QUERY (Safe access)
+  // ─────────────────────────────────────────────────────
 
-  // Responsive breakpoints
-  bool get isMobile => screenWidth < 600;
-  bool get isTablet => screenWidth >= 600 && screenWidth < 1024;
-  bool get isDesktop => screenWidth >= 1024;
+  MediaQueryData get mq =>
+      MediaQuery.maybeOf(this) ?? MediaQueryData.fromView(View.of(this));
 
-  // Orientation
-  bool get isPortrait => mediaQuery.orientation == Orientation.portrait;
-  bool get isLandscape => mediaQuery.orientation == Orientation.landscape;
+  Size get size => mq.size;
+  double get width => size.width;
+  double get height => size.height;
+  double get textScale => mq.textScaleFactor;
 
-  // Safe area
-  double get statusBarHeight => padding.top;
-  double get bottomBarHeight => padding.bottom;
-  double get safeAreaHeight => screenHeight - statusBarHeight - bottomBarHeight;
+  EdgeInsets get padding => mq.padding;
+  EdgeInsets get insets => mq.viewInsets;
+  double get devicePixelRatio => mq.devicePixelRatio;
 
-  // Snackbar shortcuts
-  void showSnackBar(
+  bool get isKeyboardOpen => insets.bottom > 0;
+
+  // ─────────────────────────────────────────────────────
+  // RESPONSIVE
+  // ─────────────────────────────────────────────────────
+
+  static const double mobileMax = 600;
+  static const double tabletMax = 1024;
+
+  bool get isMobile => width < mobileMax;
+  bool get isTablet => width >= mobileMax && width < tabletMax;
+  bool get isDesktop => width >= tabletMax;
+
+  // ─────────────────────────────────────────────────────
+  // ORIENTATION
+  // ─────────────────────────────────────────────────────
+
+  bool get isPortrait => mq.orientation == Orientation.portrait;
+  bool get isLandscape => mq.orientation == Orientation.landscape;
+
+  // ─────────────────────────────────────────────────────
+  // SAFE AREA
+  // ─────────────────────────────────────────────────────
+
+  double get statusBar => padding.top;
+  double get bottomBar => padding.bottom;
+  double get safeHeight => height - statusBar - bottomBar;
+
+  // ─────────────────────────────────────────────────────
+  // SNACKBARS (Safe)
+  // ─────────────────────────────────────────────────────
+
+  void snack(
     String message, {
     Duration duration = const Duration(seconds: 3),
     SnackBarAction? action,
-    Color? backgroundColor,
+    Color? bg,
   }) {
-    ScaffoldMessenger.of(this).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        duration: duration,
-        action: action,
-        backgroundColor: backgroundColor,
-      ),
-    );
+    final messenger = ScaffoldMessenger.maybeOf(this);
+    if (messenger == null) return;
+
+    messenger
+      ..clearSnackBars()
+      ..showSnackBar(
+        SnackBar(
+          content: Text(message),
+          duration: duration,
+          action: action,
+          backgroundColor: bg,
+        ),
+      );
   }
 
-  void showErrorSnackBar(String message) {
-    showSnackBar(message, backgroundColor: colorScheme.error);
+  void errorSnack(String message) {
+    snack(message, bg: colors.errorContainer);
   }
 
-  void showSuccessSnackBar(String message) {
-    showSnackBar(message, backgroundColor: Colors.green);
+  void successSnack(String message) {
+    snack(message, bg: colors.primaryContainer);
   }
 
-  // Dialog shortcuts
-  Future<T?> showAppDialog<T>({
-    required Widget child,
-    bool barrierDismissible = true,
-  }) {
-    return showDialog<T>(
-      context: this,
-      barrierDismissible: barrierDismissible,
-      builder: (context) => child,
-    );
+
+  // ─────────────────────────────────────────────────────
+  // FOCUS & KEYBOARD
+  // ─────────────────────────────────────────────────────
+
+  void unfocus() {
+    final FocusScopeNode current = FocusScope.of(this);
+    if (!current.hasPrimaryFocus) current.unfocus();
   }
 
-  // Focus shortcuts
-  void unfocus() => FocusScope.of(this).unfocus();
-
-  void requestFocus(FocusNode focusNode) =>
-      FocusScope.of(this).requestFocus(focusNode);
-
-  // Keyboard shortcuts
-  bool get isKeyboardVisible => viewInsets.bottom > 0;
+  void focus(FocusNode node) => FocusScope.of(this).requestFocus(node);
 }

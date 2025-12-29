@@ -79,44 +79,7 @@ class UrlValidator {
     // Even if it's not a Medium link, Freedium will show an appropriate error
     return true;
   }
-
-  /// Check if URL looks like it could be an article
-  /// This is a more lenient check that looks for common article URL patterns
-  static bool isMediumArticle(String url) {
-    if (!isValidUrl(url)) return false;
-
-    final uri = Uri.tryParse(url);
-    if (uri == null) return false;
-
-    final host = uri.host.toLowerCase();
-    final path = uri.path;
-
-    // If it's a known Medium domain, check for article patterns
-    if (host == MediumConstants.mediumDomain ||
-        host == 'www.${MediumConstants.mediumDomain}' ||
-        host.endsWith('.medium.com')) {
-      // Any medium.com path with at least one segment that isn't a search/topic/etc.
-      final segments = uri.pathSegments;
-      if (segments.isEmpty) return false;
-
-      final firstSegment = segments[0];
-      // Skip known non-article pages
-      if ([
-        'search',
-        'topic',
-        'membership',
-        'creators',
-        'about',
-        'plans',
-      ].contains(firstSegment)) {
-        return false;
-      }
-      return true;
-    }
-
-    // For custom domains and other URLs, just check if there's a path
-    return path.length > 1 && path != '/';
-  }
+  
 
   /// Extract any URL found in the text and clean it
   static String? extractUrlFromText(String text) {
