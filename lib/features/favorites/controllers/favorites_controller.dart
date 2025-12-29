@@ -46,5 +46,4 @@ class FavoritesController extends GetxController {
   void onSearchChanged(String query) {
     searchQuery.value = query;
   }
-
 }

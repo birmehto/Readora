@@ -79,7 +79,6 @@ class UrlValidator {
     // Even if it's not a Medium link, Freedium will show an appropriate error
     return true;
   }
-  
 
   /// Extract any URL found in the text and clean it
   static String? extractUrlFromText(String text) {

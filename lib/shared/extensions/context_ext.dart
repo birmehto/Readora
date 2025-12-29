@@ -91,7 +91,6 @@ extension ContextX on BuildContext {
     snack(message, bg: colors.primaryContainer);
   }
 
-
   // ─────────────────────────────────────────────────────
   // FOCUS & KEYBOARD
   // ─────────────────────────────────────────────────────

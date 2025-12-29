@@ -24,6 +24,4 @@ class FavoriteItem {
   final String? author;
   final String? domain;
   final String? imageUrl;
-
-
 }
