@@ -34,7 +34,7 @@ Like Readora? [Buy me a coffee ☕](https://buymeacoffee.com/birmehto)
 
 ## Legal
 
-Independent open-source project. Not affiliated with Medium. Uses [Freedium](https://freedium.cfd) for article access. All content © original authors. [MIT License](LICENSE).
+Independent open-source project. Not affiliated with Medium. Exclusively uses [Freedium](https://freedium.cfd) for article access. All content © original authors. [MIT License](LICENSE).
 
 ---
 
