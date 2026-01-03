@@ -1,14 +1,10 @@
-# Release Notes - v1.0.0
-
-## 🎉 Welcome to Readora
-
-Your clean, distraction-free reader for Medium articles — no paywalls, no clutter.
+# Release Notes - v1.0.1
 
 ## ✨ What's New
 
-- **🎨 Refined UI** — Cleaner typography and balanced spacing throughout
-- **⭐ Better Favorites** — More spacious layout for your saved articles
-- **📱 Streamlined Design** — Article previews now show only what matters
+- **🛡️ Enhanced Validation** — Smart detection of Medium articles to prevent loading invalid pages like profiles or settings.
+- **🚀 Optimized Performance** — Focused exclusively on Freedium for faster and more reliable article loading.
+- **🔗 Cleaner URLs** — Improved URL processing and stripping of redundant prefixes.
 
 ## 🚀 Features
 

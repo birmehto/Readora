@@ -80,6 +80,59 @@ class UrlValidator {
     return true;
   }
 
+  /// Check if the URL is specifically a Medium ARTICLE
+  /// This helps in filtering out things like Medium home page, profiles, etc.
+  static bool isMediumArticle(String url) {
+    if (!isValidUrl(url)) return false;
+
+    final uri = Uri.tryParse(url);
+    if (uri == null) return false;
+
+    // Remove query parameters for validation
+    final path = uri.path;
+
+    // Basic checks to exclude common non-article paths
+    if (path == '/' || path.isEmpty) return false;
+
+    // Exclude static pages and common Medium paths
+    final excludedPaths = [
+      '/about',
+      '/me',
+      '/settings',
+      '/membership',
+      '/creators',
+      '/p/verify',
+      '/p/report',
+      '/m/signin',
+      '/search',
+      '/tag',
+      '/topic',
+      '/plans',
+      '/verified-authors',
+    ];
+
+    for (final excluded in excludedPaths) {
+      if (path == excluded || path.startsWith('$excluded/')) {
+        return false;
+      }
+    }
+
+    // Most Medium articles have a slug followed by a unique ID (e.g., -abc123456789)
+    // or they are in the format /@username/slug-id
+    // For custom domains, it's often /slug-id
+
+    // Split path to analyze segments
+    final segments = uri.pathSegments.where((s) => s.isNotEmpty).toList();
+    if (segments.isEmpty) return false;
+
+    // If it's a profile link like /@username without further segments, it's not an article
+    if (segments.length == 1 && segments[0].startsWith('@')) return false;
+
+    // More complex regex could be used, but this heuristic is generally good for Medium articles
+    // Freedium will handle the final validation when we try to fetch it.
+    return true;
+  }
+
   /// Extract any URL found in the text and clean it
   static String? extractUrlFromText(String text) {
     if (text.isEmpty) return null;
@@ -123,8 +176,6 @@ class UrlValidator {
     final prefixes = [
       '${MediumConstants.freediumUrl}/',
       'https://freedium.cfd/',
-      'https://readmedium.com/',
-      '${MediumConstants.readMediumUrl}/',
     ];
 
     bool stripped = true;

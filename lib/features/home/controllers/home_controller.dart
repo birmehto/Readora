@@ -41,9 +41,9 @@ class HomeController extends GetxController {
         errorMessage.value = 'Please enter a valid URL';
       } else if (!UrlValidator.isMediumUrl(value)) {
         errorMessage.value = 'Please enter a Medium article URL';
-      } /* else if (!UrlValidator.isMediumArticle(value)) {
+      } else if (!UrlValidator.isMediumArticle(value)) {
         errorMessage.value = 'Please enter a valid Medium article URL';
-      } */
+      }
     }
   }
 

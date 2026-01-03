@@ -37,9 +37,6 @@ class ArticleController extends GetxController {
   // Favorites
   final isFavorite = false.obs;
 
-  // Fallback state
-  bool _isUsingFallback = false;
-
   @override
   void onInit() {
     super.onInit();
@@ -90,43 +87,12 @@ class ArticleController extends GetxController {
 
   /// Handle server errors (502, 503, etc.)
   void handleServerError(int statusCode) {
-    if ((statusCode == 502 || statusCode == 503) && !_isUsingFallback) {
-      _retryWithFallback();
-    } else {
-      String errorMsg = 'Server error ($statusCode)';
-      if (statusCode == 502) {
-        errorMsg = 'Bad Gateway (502). Server unavailable.';
-      }
-      if (statusCode == 503) errorMsg = 'Service Unavailable (503).';
-      onPageError(errorMsg);
+    String errorMsg = 'Server error ($statusCode)';
+    if (statusCode == 502) {
+      errorMsg = 'Bad Gateway (502). Server unavailable.';
     }
-  }
-
-  void _retryWithFallback() {
-    appLog('502 detected. Retrying with fallback server...');
-    _isUsingFallback = true;
-    errorMessage.value = '';
-    isLoading.value = true;
-
-    // Construct fallback URL
-    final uri = Uri.tryParse(originalUrl.value);
-    if (uri != null) {
-      final fallbackUrl = '${MediumConstants.readMediumUrl}${uri.path}';
-      currentUrl.value = fallbackUrl;
-      appLog('Fallback URL: $fallbackUrl');
-
-      Get.rawSnackbar(
-        message: 'Primary server down. Switching to backup server...',
-        duration: const Duration(seconds: 2),
-      );
-
-      // Explicitly load the new URL
-      webViewController?.loadUrl(
-        urlRequest: URLRequest(url: WebUri(fallbackUrl)),
-      );
-    } else {
-      onPageError('Could not construct fallback URL');
-    }
+    if (statusCode == 503) errorMsg = 'Service Unavailable (503).';
+    onPageError(errorMsg);
   }
 
   /// Called by WebView when error occurs
@@ -168,21 +134,7 @@ class ArticleController extends GetxController {
     loadingProgress.value = 0.0;
     _startLoadingTimer();
 
-    // If refreshing, decide whether to stick with fallback or retry primary
-    // Let's reset to try primary again if we want to check if it's back up.
-    if (_isUsingFallback) {
-      _isUsingFallback = false;
-      final uri = Uri.tryParse(originalUrl.value);
-      if (uri != null) {
-        final primaryUrl = '${MediumConstants.freediumUrl}${uri.path}';
-        currentUrl.value = primaryUrl;
-        webViewController?.loadUrl(
-          urlRequest: URLRequest(url: WebUri(primaryUrl)),
-        );
-      }
-    } else {
-      webViewController?.reload();
-    }
+    webViewController?.reload();
   }
 
   // ---------- Actions ----------

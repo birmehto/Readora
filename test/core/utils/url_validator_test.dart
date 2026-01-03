@@ -43,5 +43,48 @@ void main() {
         ); // Or null? behavior depends on implementation, safer to return original
       },
     );
+    test('isMediumArticle validates various Medium article formats', () {
+      final validUrls = [
+        'https://medium.com/@user/article-slug-id123',
+        'https://towardsdatascience.com/some-article-id456',
+        'https://username.medium.com/another-article-id789',
+        'https://uxdesign.cc/design-article-abc',
+        'https://medium.com/publication/slug-123',
+      ];
+
+      for (final url in validUrls) {
+        expect(
+          UrlValidator.isMediumArticle(url),
+          isTrue,
+          reason: 'Should be valid: $url',
+        );
+      }
+
+      final invalidUrls = [
+        'https://medium.com/',
+        'https://medium.com/about',
+        'https://medium.com/@user',
+        'https://towardsdatascience.com/',
+        'https://medium.com/me/settings',
+        'https://google.com',
+        'not-a-url',
+      ];
+
+      for (final url in invalidUrls) {
+        expect(
+          UrlValidator.isMediumArticle(url),
+          isFalse,
+          reason: 'Should be invalid: $url',
+        );
+      }
+    });
+
+    test('isMediumArticle handles custom domains from list', () {
+      expect(
+        UrlValidator.isMediumArticle('https://betterhumans.pub/article'),
+        isTrue,
+      );
+      expect(UrlValidator.isMediumArticle('https://eand.co/article'), isTrue);
+    });
   });
 }
