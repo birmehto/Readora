@@ -1,4 +1,4 @@
-# Release Notes - v1.0.1
+# Release Notes - v1.0.0
 
 ## ✨ What's New
 
@@ -12,11 +12,3 @@
 - **🔗 Universal support** — Works with all Medium domains and publications
 - **⭐ Save favorites** — Bookmark articles to read later
 - **🌈 Customizable** — Dark mode, adjustable fonts, and text spacing
-
-## Getting Started
-
-Paste any Medium link or share it directly to Readora. That's it.
-
----
-
-**Read more. Scroll less.** 📚
