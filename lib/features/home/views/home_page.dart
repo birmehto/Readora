@@ -6,6 +6,7 @@ import '../../../shared/extensions/context_ext.dart';
 import '../../../shared/widgets/app_animations.dart';
 import '../../../shared/widgets/app_button.dart';
 import '../../../shared/widgets/app_textfield.dart';
+import '../../../shared/widgets/background_painter.dart';
 import '../controllers/home_controller.dart';
 import '../widgets/home_widgets.dart' hide ScaleIn;
 
@@ -18,127 +19,144 @@ class HomePage extends GetView<HomeController> {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
-      body: CustomScrollView(
-        slivers: [
-          // ---------------- AppBar ----------------
-          SliverAppBar.medium(
-            title: const Text('Readora'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.favorite_rounded),
-                onPressed: () => Get.toNamed(AppRoutes.favorites),
-              ),
-              IconButton(
-                icon: const Icon(Icons.settings_rounded),
-                onPressed: () => Get.toNamed(AppRoutes.settings),
-              ),
-              const SizedBox(width: 8),
-            ],
-          ),
-
-          // ---------------- Content ----------------
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 24),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                const SizedBox(height: 20),
-
-                // Header Icon
-                const ScaleIn(
-                  delay: Duration(milliseconds: 100),
-                  child: Center(
-                    child: Hero(tag: 'article_icon', child: HomeHeaderIcon()),
-                  ),
+      body: MeshGradientBackground(
+        child: CustomScrollView(
+          slivers: [
+            // ---------------- AppBar ----------------
+            SliverAppBar.medium(
+              title: Text(
+                'Readora',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.5,
                 ),
+              ),
+              centerTitle: true,
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.favorite_rounded),
+                  onPressed: () => Get.toNamed(AppRoutes.favorites),
+                ),
+                IconButton(
+                  icon: const Icon(Icons.settings_rounded),
+                  onPressed: () => Get.toNamed(AppRoutes.settings),
+                ),
+                const SizedBox(width: 8),
+              ],
+            ),
 
-                const SizedBox(height: 24),
+            // ---------------- Content ----------------
+            SliverPadding(
+              padding: const EdgeInsets.symmetric(horizontal: 28),
+              sliver: SliverList(
+                delegate: SliverChildListDelegate([
+                  const SizedBox(height: 30),
 
-                // Title
-                FadeSlideIn(
-                  delay: const Duration(milliseconds: 200),
-                  child: Text(
-                    'Read Freely',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.headlineLarge?.copyWith(
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: -1,
-                      height: 1.1,
+                  // Header Icon
+                  const ScaleIn(
+                    delay: Duration(milliseconds: 100),
+                    child: Center(
+                      child: Hero(tag: 'article_icon', child: HomeHeaderIcon()),
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 30),
 
-                // Subtitle
-                FadeSlideIn(
-                  delay: const Duration(milliseconds: 300),
-                  child: Text(
-                    'Unlock premium content instantly.\nJust paste the URL below.',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant.withValues(
-                        alpha: 0.8,
+                  // Title
+                  FadeSlideIn(
+                    delay: const Duration(milliseconds: 200),
+                    child: Text(
+                      'Read Freely',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.displaySmall?.copyWith(
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: -1.5,
+                        height: 1.0,
+                        color: theme.colorScheme.onSurface,
                       ),
-                      height: 1.4,
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 16),
 
-                // URL Input (AppTextField)
-                FadeSlideIn(
-                  delay: const Duration(milliseconds: 400),
-                  child: Obx(() {
-                    final hasText = controller.urlText.isNotEmpty;
+                  // Subtitle
+                  FadeSlideIn(
+                    delay: const Duration(milliseconds: 300),
+                    child: Text(
+                      'Unlock premium Medium content instantly.\nNo limits. No paywalls.',
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.7,
+                        ),
+                        height: 1.5,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
 
-                    return AppTextField(
-                      controller: controller.urlController,
-                      hint: 'Paste article URL...',
-                      onChanged: controller.onUrlChanged,
-                      onSubmitted: (_) => controller.openArticle(),
-                      suffixIcon: Padding(
-                        padding: const EdgeInsets.only(right: 4.0),
-                        child: IconButton(
-                          icon: Icon(
-                            hasText
-                                ? Icons.clear_rounded
-                                : Icons.content_paste_rounded,
-                            size: 20,
+                  const SizedBox(height: 30),
+
+                  // URL Input (AppTextField)
+                  FadeSlideIn(
+                    delay: const Duration(milliseconds: 400),
+                    child: Obx(() {
+                      final hasText = controller.urlText.isNotEmpty;
+
+                      return AppTextField(
+                        controller: controller.urlController,
+                        hint: 'Paste Medium URL here...',
+                        onChanged: controller.onUrlChanged,
+                        onSubmitted: (_) => controller.openArticle(),
+                        errorText: controller.errorMessage.value.isEmpty
+                            ? null
+                            : controller.errorMessage.value,
+                        suffixIcon: Padding(
+                          padding: const EdgeInsets.only(right: 4.0),
+                          child: IconButton(
+                            icon: Icon(
+                              hasText
+                                  ? Icons.clear_rounded
+                                  : Icons.content_paste_rounded,
+                              size: 20,
+                            ),
+                            onPressed: hasText
+                                ? controller.clearUrl
+                                : controller.pasteFromClipboard,
                           ),
-                          onPressed: hasText
-                              ? controller.clearUrl
-                              : controller.pasteFromClipboard,
+                        ),
+                      );
+                    }),
+                  ),
+
+                  const SizedBox(height: 24),
+
+                  // Read Button
+                  FadeSlideIn(
+                    delay: const Duration(milliseconds: 500),
+                    child: Obx(
+                      () => TapScale(
+                        child: AppButton(
+                          size: AppButtonSize.large,
+                          text: 'Unlock Article',
+                          icon: Icons.bolt_rounded,
+                          isLoading: controller.isLoading.value,
+                          backgroundColor: theme.colorScheme.primary,
+                          onPressed: () {
+                            context.unfocus();
+                            controller.openArticle();
+                          },
                         ),
                       ),
-                    );
-                  }),
-                ),
-
-                const SizedBox(height: 20),
-
-                // Read Button
-                FadeSlideIn(
-                  delay: const Duration(milliseconds: 500),
-                  child: Obx(
-                    () => AppButton(
-                      size: AppButtonSize.large,
-                      text: 'Read Now',
-                      isLoading: controller.isLoading.value,
-                      backgroundColor: theme.colorScheme.primary,
-                      onPressed: () {
-                        context.unfocus();
-                        controller.openArticle();
-                      },
                     ),
                   ),
-                ),
 
-                const SizedBox(height: 48),
-              ]),
+                  const SizedBox(height: 64),
+                ]),
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

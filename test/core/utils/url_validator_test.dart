@@ -86,5 +86,30 @@ void main() {
       );
       expect(UrlValidator.isMediumArticle('https://eand.co/article'), isTrue);
     });
+
+    group('isMediumUrl', () {
+      test('identifies medium.com domains', () {
+        expect(UrlValidator.isMediumUrl('https://medium.com/foo'), isTrue);
+        expect(UrlValidator.isMediumUrl('http://www.medium.com/bar'), isTrue);
+        expect(
+          UrlValidator.isMediumUrl('https://username.medium.com/baz'),
+          isTrue,
+        );
+      });
+
+      test('identifies known custom domains', () {
+        expect(
+          UrlValidator.isMediumUrl('https://towardsdatascience.com/foo'),
+          isTrue,
+        );
+        expect(UrlValidator.isMediumUrl('https://uxdesign.cc/bar'), isTrue);
+      });
+
+      test('rejects non-medium domains', () {
+        expect(UrlValidator.isMediumUrl('https://google.com/foo'), isFalse);
+        expect(UrlValidator.isMediumUrl('https://dev.to/bar'), isFalse);
+        expect(UrlValidator.isMediumUrl('https://nytimes.com/baz'), isFalse);
+      });
+    });
   });
 }

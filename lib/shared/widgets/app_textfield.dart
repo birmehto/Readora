@@ -12,6 +12,7 @@ class AppTextField extends StatelessWidget {
     this.autofocus = false,
     this.keyboardType,
     this.textInputAction,
+    this.errorText,
   });
 
   final TextEditingController? controller;
@@ -23,6 +24,7 @@ class AppTextField extends StatelessWidget {
   final bool autofocus;
   final TextInputType? keyboardType;
   final TextInputAction? textInputAction;
+  final String? errorText;
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +45,7 @@ class AppTextField extends StatelessWidget {
         fillColor: c.surfaceContainerHighest,
         prefixIcon: prefixIcon,
         suffixIcon: suffixIcon,
+        errorText: errorText,
         contentPadding: const EdgeInsets.symmetric(
           horizontal: 18,
           vertical: 16,
@@ -50,6 +53,8 @@ class AppTextField extends StatelessWidget {
         border: _border(c.outlineVariant),
         enabledBorder: _border(c.outlineVariant),
         focusedBorder: _border(c.primary, width: 2),
+        errorBorder: _border(c.error),
+        focusedErrorBorder: _border(c.error, width: 2),
       ),
     );
   }

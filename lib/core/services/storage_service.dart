@@ -16,7 +16,7 @@ class StorageService extends GetxService {
   static const String _fontFamilyKey = 'font_family';
 
   // Theme
-  bool get isDarkMode => _box.read(_themeModeKey) ?? false;
+  bool get isDarkMode => _box.read(_themeModeKey) ?? true;
   set isDarkMode(bool value) => _box.write(_themeModeKey, value);
 
   // Font Size

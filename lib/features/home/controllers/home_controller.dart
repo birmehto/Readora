@@ -20,6 +20,7 @@ class HomeController extends GetxController {
     super.onInit();
     urlController.addListener(() {
       urlText.value = urlController.text;
+      onUrlChanged(urlController.text);
     });
   }
 
@@ -77,6 +78,16 @@ class HomeController extends GetxController {
 
     if (cleanedUrl == null) {
       errorMessage.value = 'Invalid URL format';
+      return;
+    }
+
+    if (!UrlValidator.isMediumUrl(cleanedUrl)) {
+      errorMessage.value = 'Please enter a Medium article URL';
+      return;
+    }
+
+    if (!UrlValidator.isMediumArticle(cleanedUrl)) {
+      errorMessage.value = 'Please enter a valid Medium article URL';
       return;
     }
 

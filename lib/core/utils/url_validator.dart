@@ -74,10 +74,9 @@ class UrlValidator {
       }
     }
 
-    // For any other valid URL, we'll allow it and let Freedium handle it
-    // This enables support for custom domain Medium publications
-    // Even if it's not a Medium link, Freedium will show an appropriate error
-    return true;
+    // If it's not a known Medium domain or subdomain, return false
+    // This allows us to warn the user that the URL might not be a Medium article
+    return false;
   }
 
   /// Check if the URL is specifically a Medium ARTICLE
@@ -176,6 +175,7 @@ class UrlValidator {
     final prefixes = [
       '${MediumConstants.freediumUrl}/',
       'https://freedium.cfd/',
+      'https://freedium-mirror.cfd/',
     ];
 
     bool stripped = true;

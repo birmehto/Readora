@@ -21,14 +21,6 @@ class SettingsController extends GetxController {
     Get.changeThemeMode(value ? ThemeMode.dark : ThemeMode.light);
   }
 
-  Future<void> openDonationLink() async {
-    final donationUrl = Uri.parse('https://buymeacoffee.com/birmehto');
-
-    if (await canLaunchUrl(donationUrl)) {
-      await launchUrl(donationUrl, mode: LaunchMode.externalApplication);
-    }
-  }
-
   Future<void> sendFeedback() async {
     final Uri emailLaunchUri = Uri(
       scheme: 'mailto',

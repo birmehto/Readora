@@ -6,34 +6,42 @@ class HomeHeaderIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
-    return ScaleIn(
+    return Container(
+      width: 120,
+      height: 120,
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: theme.colorScheme.primary.withValues(alpha: 0.2),
+          width: 2,
+        ),
+      ),
       child: Container(
-        width: 80,
-        height: 80,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
+              theme.colorScheme.primaryContainer.withValues(alpha: 0.8),
               theme.colorScheme.primary,
-              Color.lerp(theme.colorScheme.primary, Colors.indigo, 0.9)!,
-              theme.colorScheme.secondary,
             ],
           ),
-          boxShadow: const [
+          boxShadow: [
             BoxShadow(
-              color: Colors.black12,
-              blurRadius: 10,
-              offset: Offset(0, 4),
+              color: theme.colorScheme.primary.withValues(alpha: 0.3),
+              blurRadius: 20,
+              offset: const Offset(0, 10),
             ),
           ],
         ),
-        child: const Icon(
+        child: Icon(
           Icons.auto_stories_rounded,
-          size: 40,
-          color: Colors.white,
+          size: 48,
+          color: isDark ? theme.colorScheme.onPrimary : Colors.white,
         ),
       ),
     );

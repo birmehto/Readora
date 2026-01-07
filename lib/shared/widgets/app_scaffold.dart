@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'background_painter.dart';
 
 class AppScaffold extends StatelessWidget {
   const AppScaffold({
@@ -14,6 +15,7 @@ class AppScaffold extends StatelessWidget {
     this.resizeToAvoidBottomInset = true,
     this.extendBody = false,
     this.extendBodyBehindAppBar = false,
+    this.useMeshBackground = true,
   });
   final Widget body;
   final PreferredSizeWidget? appBar;
@@ -26,12 +28,19 @@ class AppScaffold extends StatelessWidget {
   final bool resizeToAvoidBottomInset;
   final bool extendBody;
   final bool extendBodyBehindAppBar;
+  final bool useMeshBackground;
 
   @override
   Widget build(BuildContext context) {
+    Widget content = SafeArea(child: body);
+
+    if (useMeshBackground) {
+      content = MeshGradientBackground(child: content);
+    }
+
     return Scaffold(
       appBar: appBar,
-      body: SafeArea(child: body),
+      body: content,
       floatingActionButton: floatingActionButton,
       floatingActionButtonLocation: floatingActionButtonLocation,
       bottomNavigationBar: bottomNavigationBar,

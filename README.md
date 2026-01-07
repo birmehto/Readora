@@ -1,17 +1,32 @@
 # 📖 Readora
 
-Read Medium articles without paywalls, ads, or distractions.
+A clean, distraction-free reader for Medium articles.
+
+Read Medium stories in a focused layout without ads, popups, or visual noise.
+
+---
 
 ## Why Readora?
 
-- **🔓 No paywalls** — Access any Medium article freely
-- **🧘 Zero clutter** — Clean reading experience with no ads or popups
-- **🎨 Your style** — Customize fonts, spacing, and dark mode
-- **⭐ Save favorites** — Bookmark articles you want to revisit
+- **🧘 Distraction-free** — Minimal reading experience with no clutter  
+- **⚡ Fast loading** — Opens Medium articles through public mirrors  
+- **🎨 Customizable** — Fonts, spacing, themes, and dark mode  
+- **⭐ Save & revisit** — Bookmark your favorite articles  
 
-Works with all Medium links — publications, custom domains, everything.
+Works with all Medium links — publications, custom domains, and shared URLs.
+
+---
+
+## How it works
+
+Readora opens Medium articles using **publicly available reader endpoints** (such as Freedium) that provide clean, readable versions of articles already accessible on the web.
+
+Readora does **not** host, store, or modify any copyrighted content.
+
+---
 
 ## Get Started
+
 ```bash
 git clone https://github.com/birmehto/readora.git
 cd readora
