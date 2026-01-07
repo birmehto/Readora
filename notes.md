@@ -1,5 +1,9 @@
-git checkout -b release  # or git checkout release
-git push origin release
+git tag -d v1.0.0 // delete
+git tag v1.0.0
+git push origin :refs/tags/v1.0.0
+git push origin v1.0.0
 
+Verify
 
-git tag v1.0.2 && git push origin v1.0.2
+git tag
+git show v1.0.0
