@@ -7,8 +7,8 @@ import '../../../core/utils/url_validator.dart';
 import '../../../shared/widgets/app_animations.dart';
 import '../models/favorites_item.dart';
 
-class FavoritesListItem extends StatelessWidget {
-  const FavoritesListItem({required this.item, this.onDelete, super.key});
+class FavitesListItem extends StatelessWidget {
+  const FavitesListItem({required this.item, this.onDelete, super.key});
 
   final FavoriteItem item;
   final VoidCallback? onDelete;

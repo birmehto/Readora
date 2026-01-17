@@ -19,42 +19,34 @@ class ArticlePage extends GetView<ArticleController> {
     return AppScaffold(
       appBar: AppAppBar(
         title: controller.articleTitle,
-
-        // ✅ Correct PreferredSize usage
         bottom: PreferredSize(
           preferredSize: const Size.fromHeight(4),
           child: Obx(() {
-            if (!controller.isLoading.value || controller.isInitialLoad.value) {
-              return const SizedBox.shrink();
-            }
-
-            return LinearProgressIndicator(
-              value: controller.loadingProgress.value,
-              backgroundColor: Colors.transparent,
-              valueColor: AlwaysStoppedAnimation<Color>(
-                theme.colorScheme.primary,
-              ),
-            );
+            final show =
+                controller.isLoading.value && !controller.isInitialLoad.value;
+            return show
+                ? LinearProgressIndicator(
+                    value: controller.loadingProgress.value,
+                    backgroundColor: Colors.transparent,
+                    valueColor: AlwaysStoppedAnimation(
+                      theme.colorScheme.primary,
+                    ),
+                  )
+                : const SizedBox.shrink();
           }),
         ),
-
         actions: [
-          Obx(
-            () => IconButton(
+          Obx(() {
+            final isFav = controller.isFavorite.value;
+            return IconButton(
               icon: Icon(
-                controller.isFavorite.value
-                    ? Icons.favorite_rounded
-                    : Icons.favorite_border_rounded,
-                color: controller.isFavorite.value
-                    ? theme.colorScheme.error
-                    : null,
+                isFav ? Icons.favorite_rounded : Icons.favorite_border_rounded,
+                color: isFav ? theme.colorScheme.error : null,
               ),
-              tooltip: controller.isFavorite.value
-                  ? 'Remove from Favorites'
-                  : 'Add to Favorites',
+              tooltip: isFav ? 'Remove from Favorites' : 'Add to Favorites',
               onPressed: controller.toggleFavorite,
-            ),
-          ),
+            );
+          }),
           IconButton(
             icon: const Icon(Icons.share_rounded),
             tooltip: 'Share',
@@ -63,26 +55,26 @@ class ArticlePage extends GetView<ArticleController> {
         ],
       ),
 
-      // ---------- BODY ----------
       body: Stack(
         children: [
-          // WebView (never unmounts)
           Obx(() => ArticleWebView(url: controller.currentUrl.value)),
 
-          // Error overlay
           Obx(() {
-            if (controller.errorMessage.isEmpty) {
-              return const SizedBox.shrink();
-            }
-
-            return _ErrorOverlay(
-              message: controller.errorMessage.value,
-              onRetry: controller.requestRefresh,
-              onOpenBrowser: controller.openInBrowser,
-            );
+            final msg = controller.errorMessage.value;
+            return msg.isEmpty
+                ? const SizedBox.shrink()
+                : Positioned.fill(
+                    child: Material(
+                      color: theme.scaffoldBackgroundColor,
+                      child: ArticleError(
+                        message: msg,
+                        onRetry: controller.requestRefresh,
+                        onOpenBrowser: controller.openInBrowser,
+                      ),
+                    ),
+                  );
           }),
 
-          // Initial loading overlay
           Obx(
             () => controller.isInitialLoad.value
                 ? const Positioned.fill(child: AppLoading())
@@ -91,7 +83,6 @@ class ArticlePage extends GetView<ArticleController> {
         ],
       ),
 
-      // ---------- BOTTOM BAR ----------
       bottomNavigationBar: _BottomBar(
         onSettings: () => _showReadingSettings(context),
         onRefresh: controller.requestRefresh,
@@ -104,40 +95,15 @@ class ArticlePage extends GetView<ArticleController> {
   void _showReadingSettings(BuildContext context) {
     showModalBottomSheet(
       context: context,
-      isScrollControlled: true,
       useSafeArea: true,
+      isScrollControlled: true,
       builder: (_) => const ReadingSettingsSheet(),
     );
   }
 }
 
-/// ---------- Error Overlay ----------
-class _ErrorOverlay extends StatelessWidget {
-  const _ErrorOverlay({
-    required this.message,
-    required this.onRetry,
-    required this.onOpenBrowser,
-  });
-  final String message;
-  final VoidCallback onRetry;
-  final VoidCallback onOpenBrowser;
+// ─────────────────────────────────────────────
 
-  @override
-  Widget build(BuildContext context) {
-    return Positioned.fill(
-      child: Material(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        child: ArticleError(
-          message: message,
-          onRetry: onRetry,
-          onOpenBrowser: onOpenBrowser,
-        ),
-      ),
-    );
-  }
-}
-
-/// ---------- Bottom Bar ----------
 class _BottomBar extends StatelessWidget {
   const _BottomBar({
     required this.onSettings,
@@ -145,6 +111,7 @@ class _BottomBar extends StatelessWidget {
     required this.onCopy,
     required this.onBrowser,
   });
+
   final VoidCallback onSettings;
   final VoidCallback onRefresh;
   final VoidCallback onCopy;
@@ -158,28 +125,16 @@ class _BottomBar extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          IconButton(
-            icon: const Icon(Icons.settings_suggest_rounded),
-            tooltip: 'Reading Settings',
-            onPressed: onSettings,
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Refresh',
-            onPressed: onRefresh,
-          ),
-          IconButton(
-            icon: const Icon(Icons.copy_rounded),
-            tooltip: 'Copy Link',
-            onPressed: onCopy,
-          ),
-          IconButton(
-            icon: const Icon(Icons.open_in_browser_rounded),
-            tooltip: 'Open in Browser',
-            onPressed: onBrowser,
-          ),
+          _btn(Icons.settings_suggest_rounded, 'Reading Settings', onSettings),
+          _btn(Icons.refresh_rounded, 'Refresh', onRefresh),
+          _btn(Icons.copy_rounded, 'Copy Link', onCopy),
+          _btn(Icons.open_in_browser_rounded, 'Open in Browser', onBrowser),
         ],
       ),
     );
+  }
+
+  Widget _btn(IconData icon, String tip, VoidCallback onTap) {
+    return IconButton(icon: Icon(icon), tooltip: tip, onPressed: onTap);
   }
 }

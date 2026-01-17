@@ -94,7 +94,7 @@ class AppButton extends StatelessWidget {
     return button;
   }
 
-  // ---------- Content ----------
+  //  Content
 
   Widget _buildContent(
     ThemeData theme,
@@ -126,7 +126,7 @@ class AppButton extends StatelessWidget {
     );
   }
 
-  // ---------- Size ----------
+  //  Size
 
   _ButtonSizeConfig get _sizeConfig {
     return switch (size) {
@@ -154,7 +154,7 @@ class AppButton extends StatelessWidget {
     };
   }
 
-  // ---------- Colors ----------
+  //  Colors
 
   _ButtonColors _colors(ColorScheme c) {
     final base = switch (variant) {
@@ -188,7 +188,7 @@ class AppButton extends StatelessWidget {
   }
 }
 
-// ---------- Internals ----------
+//  Internals
 
 class _ButtonSizeConfig {
   const _ButtonSizeConfig({

@@ -11,8 +11,8 @@ class AppLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return Center(
       child: Container(
-        width: 80,
-        height: 80,
+        width: 50,
+        height: 50,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(50),
           color: context.colors.primaryContainer,

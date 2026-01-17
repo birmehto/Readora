@@ -1,7 +1,8 @@
 class MediumConstants {
-  static const String freediumUrl = 'https://freedium-mirror.cfd';
-  static const String mediumDomain = 'medium.com';
+  const MediumConstants._();
 
-  // Timeouts
-  static const Duration webViewTimeout = Duration(seconds: 45);
+  static const freediumUrl = 'https://freedium-mirror.cfd';
+  static const mediumDomain = 'medium.com';
+
+  static const webViewTimeout = Duration(seconds: 45);
 }

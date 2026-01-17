@@ -4,14 +4,13 @@ publish_to: 'none'
 version: 1.0.0
 
 environment:
-  sdk: ^3.10.4
+  sdk: ^3.10.7
 
 dependencies:
   flutter:
     sdk: flutter
 
   url_launcher: ^6.3.2
-  flutter_inappwebview: ^6.1.5
   intl: ^0.20.2
   share_plus: ^12.0.1
   flutter_screenutil: ^5.9.3
@@ -19,10 +18,8 @@ dependencies:
   get_storage: ^2.1.1
   expressive_loading_indicator: ^0.0.1
   material_new_shapes: ^1.0.0
-  animations: ^2.1.1
-
-
-
+  flutter_inappwebview: ^6.1.5
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

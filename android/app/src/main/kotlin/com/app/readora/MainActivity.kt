@@ -3,71 +3,92 @@ package com.app.readora
 import android.content.Intent
 import android.os.Bundle
 import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
-    private val CHANNEL = "app.channel.shared.data"
-    private var sharedUrl: String? = null
+
+    private companion object {
+        const val CHANNEL = "app.channel.shared.data"
+    }
+
+    private var pendingSharedUrl: String? = null
+    private lateinit var channel: MethodChannel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        handleIntent(intent)
+        extractSharedUrl(intent)
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
-        handleIntent(intent)
+        extractSharedUrl(intent)
+        notifyFlutterIfReady()
     }
 
-    private fun handleIntent(intent: Intent?) {
-        when (intent?.action) {
-            Intent.ACTION_SEND -> {
-                if (intent.type == "text/plain") {
-                    sharedUrl = intent.getStringExtra(Intent.EXTRA_TEXT)
-                }
-            }
-            Intent.ACTION_VIEW -> {
-                sharedUrl = intent.dataString
-            }
-        }
-    }
-
-    override fun configureFlutterEngine(flutterEngine: io.flutter.embedding.engine.FlutterEngine) {
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler { call, result ->
-            when (call.method) {
-                "getInitialUrl" -> {
-                    result.success(sharedUrl)
-                    sharedUrl = null // Clear after sending
-                }
-                "shareUrl" -> {
-                    val url = call.argument<String>("url")
-                    val title = call.argument<String>("title")
-                    shareUrl(url, title)
-                    result.success(null)
-                }
-                else -> {
-                    result.notImplemented()
+
+        channel = MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CHANNEL,
+        ).apply {
+            setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "getInitialUrl" -> {
+                        result.success(pendingSharedUrl)
+                        pendingSharedUrl = null
+                    }
+                    "shareUrl" -> {
+                        shareUrl(
+                            call.argument("url"),
+                            call.argument("title"),
+                        )
+                        result.success(null)
+                    }
+                    else -> result.notImplemented()
                 }
             }
         }
-        
-        // Notify Flutter about shared URL if app is already running
-        sharedUrl?.let { url ->
-            MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL)
-                .invokeMethod("handleSharedUrl", url)
-            sharedUrl = null
+
+        notifyFlutterIfReady()
+    }
+
+    // ─────────────────────────────────────────────
+
+    private fun extractSharedUrl(intent: Intent?) {
+        pendingSharedUrl = when (intent?.action) {
+            Intent.ACTION_SEND ->
+                intent.takeIf { it.type == "text/plain" }
+                    ?.getStringExtra(Intent.EXTRA_TEXT)
+
+            Intent.ACTION_VIEW ->
+                intent.dataString
+
+            else -> pendingSharedUrl
+        }
+    }
+
+    private fun notifyFlutterIfReady() {
+        val url = pendingSharedUrl ?: return
+        if (::channel.isInitialized) {
+            channel.invokeMethod("handleSharedUrl", url)
+            pendingSharedUrl = null
         }
     }
 
     private fun shareUrl(url: String?, title: String?) {
-        val shareIntent = Intent().apply {
-            action = Intent.ACTION_SEND
-            type = "text/plain"
-            putExtra(Intent.EXTRA_TEXT, url)
-            putExtra(Intent.EXTRA_SUBJECT, title)
-        }
-        startActivity(Intent.createChooser(shareIntent, "Share Article"))
+        if (url.isNullOrEmpty()) return
+
+        startActivity(
+            Intent.createChooser(
+                Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, url)
+                    putExtra(Intent.EXTRA_SUBJECT, title)
+                },
+                "Share Article",
+            ),
+        )
     }
 }

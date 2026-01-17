@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'background_painter.dart';
 
 class AppScaffold extends StatelessWidget {
   const AppScaffold({
@@ -32,11 +31,7 @@ class AppScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget content = SafeArea(child: body);
-
-    if (useMeshBackground) {
-      content = MeshGradientBackground(child: content);
-    }
+    final Widget content = SafeArea(child: body);
 
     return Scaffold(
       appBar: appBar,

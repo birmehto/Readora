@@ -8,20 +8,20 @@ import '../../../core/utils/url_validator.dart';
 import '../../../shared/widgets/app_snackbar.dart';
 
 class HomeController extends GetxController {
-  final ClipboardService _clipboardService = Get.find();
+  HomeController(this._clipboardService);
 
-  final TextEditingController urlController = TextEditingController();
-  final RxString urlText = ''.obs;
-  final RxString errorMessage = ''.obs;
-  final RxBool isLoading = false.obs;
+  final ClipboardService _clipboardService;
+
+  final urlController = TextEditingController();
+
+  final urlText = ''.obs;
+  final errorMessage = ''.obs;
+  final isLoading = false.obs;
 
   @override
   void onInit() {
     super.onInit();
-    urlController.addListener(() {
-      urlText.value = urlController.text;
-      onUrlChanged(urlController.text);
-    });
+    urlController.addListener(_onTextChanged);
   }
 
   @override
@@ -30,36 +30,43 @@ class HomeController extends GetxController {
     super.onClose();
   }
 
-  bool get canOpenArticle {
-    return urlText.isNotEmpty && errorMessage.isEmpty && !isLoading.value;
+  bool get canOpenArticle =>
+      urlText.isNotEmpty && errorMessage.isEmpty && !isLoading.value;
+
+  // ─────────────────────────────────────────────
+
+  void _onTextChanged() {
+    final text = urlController.text;
+    urlText.value = text;
+    _validate(text);
   }
 
-  void onUrlChanged(String value) {
+  void _validate(String value) {
     errorMessage.value = '';
 
-    if (value.isNotEmpty) {
-      if (!UrlValidator.isValidUrl(value)) {
-        errorMessage.value = 'Please enter a valid URL';
-      } else if (!UrlValidator.isMediumUrl(value)) {
-        errorMessage.value = 'Please enter a Medium article URL';
-      } else if (!UrlValidator.isMediumArticle(value)) {
-        errorMessage.value = 'Please enter a valid Medium article URL';
-      }
+    if (value.isEmpty) return;
+    if (!UrlValidator.isValidUrl(value)) {
+      errorMessage.value = 'Please enter a valid URL';
+    } else if (!UrlValidator.isMediumUrl(value)) {
+      errorMessage.value = 'Please enter a Medium article URL';
+    } else if (!UrlValidator.isMediumArticle(value)) {
+      errorMessage.value = 'Please enter a valid Medium article URL';
     }
   }
 
+  // ─────────────────────────────────────────────
+
   Future<void> pasteFromClipboard() async {
     try {
-      final clipboardText = await _clipboardService.getFromClipboard();
-      if (clipboardText != null && clipboardText.isNotEmpty) {
-        urlController.text = clipboardText;
-        onUrlChanged(clipboardText);
+      final text = await _clipboardService.getFromClipboard();
+      if (text?.isNotEmpty ?? false) {
+        urlController.text = text!;
       }
     } catch (e) {
       AppSnackbar.show(
         Get.context!,
         title: 'Error',
-        message: 'Failed to paste from clipboard: $e',
+        message: 'Failed to paste from clipboard',
         type: SnackbarType.error,
       );
     }
@@ -70,46 +77,33 @@ class HomeController extends GetxController {
     errorMessage.value = '';
   }
 
+  // ─────────────────────────────────────────────
+
   Future<void> openArticle() async {
     if (!canOpenArticle) return;
 
-    final url = urlController.text.trim();
-    final cleanedUrl = UrlValidator.cleanUrl(url);
-
-    if (cleanedUrl == null) {
+    final cleaned = UrlValidator.cleanTextiseUrl(urlController.text);
+    if (cleaned == null) {
       errorMessage.value = 'Invalid URL format';
       return;
     }
 
-    if (!UrlValidator.isMediumUrl(cleanedUrl)) {
-      errorMessage.value = 'Please enter a Medium article URL';
-      return;
-    }
-
-    if (!UrlValidator.isMediumArticle(cleanedUrl)) {
-      errorMessage.value = 'Please enter a valid Medium article URL';
-      return;
-    }
-
     isLoading.value = true;
-
     try {
-      // Convert to Freedium URL
-      final freediumUrl = UrlValidator.convertToFreediumUrl(cleanedUrl);
-
-      appLog('App Url => $cleanedUrl');
-
-      if (freediumUrl != null) {
-        // Navigate to webview with the Freedium URL
-        await Get.toNamed(
-          AppRoutes.article,
-          arguments: {'url': freediumUrl, 'originalUrl': cleanedUrl},
-        );
-      } else {
+      final freediumUrl = UrlValidator.convertToFreediumUrl(cleaned);
+      if (freediumUrl == null) {
         errorMessage.value = 'Failed to process the URL';
+        return;
       }
+
+      appLog('App Url => $cleaned');
+
+      await Get.toNamed(
+        AppRoutes.article,
+        arguments: {'url': freediumUrl, 'originalUrl': cleaned},
+      );
     } catch (e) {
-      errorMessage.value = 'Failed to open article: ${e.toString()}';
+      errorMessage.value = 'Failed to open article';
     } finally {
       isLoading.value = false;
     }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../shared/widgets/background_painter.dart';
 import '../controllers/settings_controller.dart';
 
 class SettingsPage extends GetView<SettingsController> {
@@ -13,83 +12,79 @@ class SettingsPage extends GetView<SettingsController> {
 
     return Scaffold(
       backgroundColor: theme.colorScheme.surface,
-      body: MeshGradientBackground(
-        child: CustomScrollView(
-          slivers: [
-            SliverAppBar.medium(
-              title: Text(
-                'Settings',
-                style: theme.textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.w800,
+      appBar: AppBar(
+        centerTitle: false,
+        title: Text(
+          'Settings',
+          style: theme.textTheme.headlineSmall?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(horizontal: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 12),
+
+            _sectionHeader(context, 'Appearance'),
+            _card(
+              context,
+              children: [
+                Obx(
+                  () => SwitchListTile.adaptive(
+                    contentPadding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
+                    ),
+                    secondary: _iconBox(
+                      theme,
+                      controller.isDarkMode.value
+                          ? Icons.dark_mode_rounded
+                          : Icons.light_mode_rounded,
+                      theme.colorScheme.primaryContainer,
+                    ),
+                    title: Text(
+                      'Dark Mode',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    subtitle: const Text('Comfortable reading in low light'),
+                    value: controller.isDarkMode.value,
+                    onChanged: controller.toggleTheme,
+                  ),
                 ),
-              ),
-              centerTitle: true,
+              ],
             ),
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
-              sliver: SliverList(
-                delegate: SliverChildListDelegate([
-                  const SizedBox(height: 12),
-                  _sectionHeader(context, 'Appearance'),
-                  _card(
-                    context,
-                    children: [
-                      Obx(
-                        () => SwitchListTile.adaptive(
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 20,
-                            vertical: 8,
-                          ),
-                          secondary: _iconBox(
-                            theme,
-                            controller.isDarkMode.value
-                                ? Icons.dark_mode_rounded
-                                : Icons.light_mode_rounded,
-                            theme.colorScheme.primaryContainer,
-                          ),
-                          title: Text(
-                            'Dark Mode',
-                            style: theme.textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          subtitle: const Text(
-                            'Comfortable reading in low light',
-                          ),
-                          value: controller.isDarkMode.value,
-                          onChanged: controller.toggleTheme,
-                        ),
-                      ),
-                    ],
-                  ),
-                  _sectionHeader(context, 'About'),
-                  _card(
-                    context,
-                    children: [
-                      _tile(
-                        context,
-                        icon: Icons.mail_outline_rounded,
-                        bg: theme.colorScheme.tertiaryContainer,
-                        title: 'Send Feedback',
-                        trailing: const Icon(Icons.chevron_right_rounded),
-                        onTap: controller.sendFeedback,
-                      ),
-                      const _Divider(),
-                      _versionTile(context),
-                      const _Divider(),
-                      _tile(
-                        context,
-                        icon: Icons.gavel_rounded,
-                        bg: theme.colorScheme.secondaryContainer,
-                        title: 'Licenses & Credits',
-                        onTap: () => _showCreditsDialog(context),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 48),
-                ]),
-              ),
+
+            _sectionHeader(context, 'About'),
+            _card(
+              context,
+              children: [
+                _tile(
+                  context,
+                  icon: Icons.mail_outline_rounded,
+                  bg: theme.colorScheme.tertiaryContainer,
+                  title: 'Send Feedback',
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: controller.sendFeedback,
+                ),
+                const _Divider(),
+                _versionTile(context),
+                const _Divider(),
+                _tile(
+                  context,
+                  icon: Icons.gavel_rounded,
+                  bg: theme.colorScheme.secondaryContainer,
+                  title: 'Licenses & Credits',
+                  onTap: () => _showCreditsDialog(context),
+                ),
+              ],
             ),
+
+            const SizedBox(height: 48),
           ],
         ),
       ),
