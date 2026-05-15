@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -9,6 +10,12 @@ class ShareIntentService extends GetxService {
   static const _channel = MethodChannel('app.channel.shared.data');
 
   Future<ShareIntentService> init() async {
+    if (!Platform.isAndroid) {
+      // Share intent via MethodChannel is Android-only.
+      // iOS share extension support is a follow-up.
+      return this;
+    }
+
     // Handle incoming intents when app is running
     _channel.setMethodCallHandler((call) async {
       if (call.method == 'handleSharedUrl') {

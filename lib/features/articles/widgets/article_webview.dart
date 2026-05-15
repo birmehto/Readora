@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:get/get.dart';
@@ -16,11 +17,13 @@ class ArticleWebView extends GetView<ArticleController> {
     final initialSettings = InAppWebViewSettings(
       userAgent:
           'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
-      builtInZoomControls: false,
+      builtInZoomControls: Platform.isAndroid ? false : null,
       allowsInlineMediaPlayback: true,
       mediaPlaybackRequiresUserGesture: false,
       useShouldOverrideUrlLoading: true,
-      mixedContentMode: MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW,
+      mixedContentMode: Platform.isAndroid
+          ? MixedContentMode.MIXED_CONTENT_ALWAYS_ALLOW
+          : null,
     );
 
     return InAppWebView(
