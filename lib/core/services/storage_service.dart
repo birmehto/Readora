@@ -14,6 +14,9 @@ class StorageService extends GetxService {
   static const String _themeModeKey = 'theme_mode';
   static const String _fontSizeKey = 'font_size';
   static const String _fontFamilyKey = 'font_family';
+  static const String _favoritesKey = 'favorites_list';
+  static const String _scrollPositionsKey = 'scroll_positions_map';
+  static const String _engineKey = 'reader_engine_url';
 
   // Theme
   bool get isDarkMode => _box.read(_themeModeKey) ?? true;
@@ -27,13 +30,22 @@ class StorageService extends GetxService {
   String get fontFamily => _box.read(_fontFamilyKey) ?? 'Inter';
   set fontFamily(String value) => _box.write(_fontFamilyKey, value);
 
+  // Bypass Engine settings
+  static const String defaultEngine = 'https://freedium-mirror.cfd';
+  static const List<Map<String, String>> availableEngines = [
+    {'name': 'Freedium Mirror', 'url': 'https://freedium-mirror.cfd'},
+    {'name': 'Freedium CFD', 'url': 'https://freedium.cfd'},
+    {'name': 'ReadMedium', 'url': 'https://readmedium.com'},
+  ];
+
+  String get activeEngineUrl => _box.read(_engineKey) ?? defaultEngine;
+  set activeEngineUrl(String value) => _box.write(_engineKey, value);
+
   // Favorites
-  static const String _favoritesKey = 'favorites_list';
   List<dynamic> get favorites => _box.read(_favoritesKey) ?? [];
 
   Future<void> addToFavorites(Map<String, dynamic> item) async {
     final list = favorites;
-    // Avoid duplicates
     if (!list.any((element) => element['url'] == item['url'])) {
       list.insert(0, item);
       await _box.write(_favoritesKey, list);
@@ -48,5 +60,22 @@ class StorageService extends GetxService {
 
   bool isFavorite(String url) {
     return favorites.any((element) => element['url'] == url);
+  }
+
+  // Scroll Positions
+  Map<String, dynamic> get _scrollPositions => _box.read(_scrollPositionsKey) ?? {};
+
+  Future<void> saveScrollPosition(String url, int y, double percentage) async {
+    final map = Map<String, dynamic>.from(_scrollPositions);
+    map[url] = {'y': y, 'percentage': percentage, 'updatedAt': DateTime.now().toIso8601String()};
+    await _box.write(_scrollPositionsKey, map);
+  }
+
+  Map<String, dynamic>? getScrollPosition(String url) {
+    final map = _scrollPositions;
+    if (map.containsKey(url)) {
+      return Map<String, dynamic>.from(map[url]);
+    }
+    return null;
   }
 }

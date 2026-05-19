@@ -25,7 +25,6 @@ class Readora extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           initialRoute: AppRoutes.home,
           getPages: AppPages.routes,
-          defaultTransition: Transition.cupertino,
         );
       },
     );

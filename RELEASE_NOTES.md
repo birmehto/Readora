@@ -1,14 +1,11 @@
-# Release Notes - v1.0.0
+# Release Notes - v1.1.0
 
-## ✨ What's New
+## ✨ What's New in v1.1.0
 
-- **🛡️ Enhanced Validation** — Smart detection of Medium articles to prevent loading invalid pages like profiles or settings.
-- **🚀 Optimized Performance** — Focused exclusively on Freedium for faster and more reliable article loading.
-- **🔗 Cleaner URLs** — Improved URL processing and stripping of redundant prefixes.
-
-## 🚀 Features
-
-- **🔓 Paywall-free reading** — Access any Medium article instantly
-- **🔗 Universal support** — Works with all Medium domains and publications
-- **⭐ Save favorites** — Bookmark articles to read later
-- **🌈 Customizable** — Dark mode, adjustable fonts, and text spacing
+- **🏛️ Clean Architecture & Feature-First Separation** — Restructured all modules into Domain, Data, and Presentation subdirectories to ensure maximum modularity and standard codebase cleanliness.
+- **📱 Native Share Intent Integration** — Integrated the cross-platform `receive_sharing_intent` package and fully cleaned up the Android/iOS native files to standard defaults.
+- **🛠️ Unsigned IPA Sideloading support** — Added automated build scripts to build and package unsigned `.ipa` files without requiring codesigning credentials, perfect for AltStore or sideloading!
+- **⚡ Advanced Reading Features**:
+  - **💾 Persistent Scroll Position** — Remembers and resumes reading coordinates upon page loads.
+  - **🔄 Engine Auto-Failover** — Integrated three mirror bypass servers with automatic error redirection.
+  - **📊 Active Reading Progress** — Displays real-time reading progress indicators.

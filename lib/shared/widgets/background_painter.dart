@@ -33,7 +33,7 @@ class MeshGradientBackground extends StatelessWidget {
             _AnimatedMesh(colors: colors)
           else
             CustomPaint(painter: MeshGradientPainter(colors: colors)),
-          if (child != null) child!,
+          ?child,
         ],
       ),
     );

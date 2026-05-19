@@ -11,14 +11,14 @@ analyzer:
     unused_catch_clause: warning
     unused_shown_name: warning
     unused_catch_stack: warning
-    
+
     # 🔒 Security & Safety
     invalid_null_aware_operator: error
     missing_required_param: error
     missing_return: error
     argument_type_not_assignable: error
     invalid_assignment: error
-    
+
     # 📝 Documentation & Warnings
     public_member_api_docs: ignore
     deprecated_member_use: warning
@@ -27,7 +27,7 @@ analyzer:
     prefer_null_aware_method_calls: ignore
     avoid_equals_and_hash_code_on_mutable_classes: ignore
     avoid_slow_async_io: ignore
-    
+
   exclude:
     - "**/*.g.dart"
     - "**/*.freezed.dart"
@@ -51,7 +51,7 @@ linter:
     prefer_final_in_for_each: true
     avoid_function_literals_in_foreach_calls: true
     use_string_buffers: true
-    
+
     # 🧠 Widget Performance & Flutter Best Practices
     avoid_unnecessary_containers: true
     sized_box_for_whitespace: true
@@ -60,18 +60,17 @@ linter:
     use_build_context_synchronously: true
     use_colored_box: true
     use_full_hex_values_for_flutter_colors: true
-    
+
     # 🔒 Null Safety & Type Safety
     prefer_null_aware_operators: true
     unnecessary_null_checks: true
     unnecessary_null_in_if_null_operators: true
-    avoid_null_checks_in_equality_operators: true
     prefer_is_empty: true
     prefer_is_not_empty: true
     prefer_is_not_operator: true
     always_declare_return_types: true
     type_annotate_public_apis: true
-    
+
     # 🧹 Code Cleanup & Style
     unnecessary_this: true
     avoid_redundant_argument_values: true
@@ -87,7 +86,7 @@ linter:
     unnecessary_string_escapes: true
     unnecessary_raw_strings: true
     unnecessary_brace_in_string_interps: true
-    
+
     # � Namidng Conventions
     camel_case_types: true
     camel_case_extensions: true
@@ -96,7 +95,7 @@ linter:
     non_constant_identifier_names: true
     constant_identifier_names: true
     package_names: true
-    
+
     # 🏗️ Code Structure & Organization
     prefer_single_quotes: true
     require_trailing_commas: true
@@ -106,7 +105,7 @@ linter:
     directives_ordering: true
     prefer_relative_imports: true
     always_put_required_named_parameters_first: true
-    
+
     # 🚫 Avoid Anti-patterns & Bad Practices
     avoid_print: true
     avoid_returning_null_for_void: true
@@ -119,23 +118,22 @@ linter:
     avoid_implementing_value_types: true
     avoid_private_typedef_functions: true
     avoid_renaming_method_parameters: true
-    avoid_returning_null: true
     avoid_returning_this: true
     avoid_setters_without_getters: true
     avoid_shadowing_type_parameters: true
     avoid_single_cascade_in_expression_statements: true
     avoid_types_as_parameter_names: true
     avoid_types_on_closure_parameters: true
-    
+
     # 🔧 Error Handling & Exceptions
     only_throw_errors: true
     avoid_catching_errors: true
     use_rethrow_when_possible: true
     throw_in_finally: true
-    
+
     # 🔄 Async Programming & Futures
     # unawaited_futures: true
-    
+
     # 📊 Collections & Iterables
     prefer_collection_literals: true
     prefer_iterable_whereType: true
@@ -143,11 +141,11 @@ linter:
     prefer_for_elements_to_map_fromIterable: true
     prefer_if_elements_to_conditional_expressions: true
     prefer_inlined_adds: true
-    
+
     # 🧪 Testing & Quality Assurance
     test_types_in_equals: true
     hash_and_equals: true
-    
+
     # 🚀 Modern Dart Features
     prefer_generic_function_type_aliases: true
     prefer_if_null_operators: true
@@ -155,30 +153,28 @@ linter:
     prefer_interpolation_to_compose_strings: true
     prefer_adjacent_string_concatenation: true
     prefer_contains: true
-    prefer_equal_for_default_values: true
     prefer_expression_function_bodies: true
     prefer_function_declarations_over_variables: true
     prefer_initializing_formals: true
     prefer_typing_uninitialized_variables: true
-    
+
     # 🎯 Flutter & Dart Specific Optimizations
     use_super_parameters: true
     use_enums: true
-    use_if_null_to_convert_nulls_to_bools: true
     use_is_even_rather_than_modulo: true
     use_named_constants: true
     use_raw_strings: true
     use_test_throws_matchers: true
     use_to_and_as_if_applicable: true
-    
+
     # 🔐 Security & Best Practices
     secure_pubspec_urls: true
     depend_on_referenced_packages: true
-    
+
     # 📱 Platform & Compatibility
     no_leading_underscores_for_library_prefixes: true
     no_leading_underscores_for_local_identifiers: true
-    
+
     # 🔍 Additional Quality Checks
     literal_only_boolean_expressions: true
     no_adjacent_strings_in_list: true

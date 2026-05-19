@@ -1,4 +1,8 @@
+import 'package:get/get.dart';
+
 import '../app/app_constants.dart';
+import '../services/storage_service.dart';
+
 
 class UrlValidator {
   static const String _urlPattern =
@@ -173,9 +177,9 @@ class UrlValidator {
     // Strip existing Freedium or ReadMedium prefixes to prevent double-prefixing
     // and to fix any already corrupted URLs in favorites
     final prefixes = [
-      '${MediumConstants.freediumUrl}/',
-      'https://freedium.cfd/',
       'https://freedium-mirror.cfd/',
+      'https://freedium.cfd/',
+      'https://readmedium.com/',
     ];
 
     bool stripped = true;
@@ -190,8 +194,9 @@ class UrlValidator {
     }
 
     // Now targetUrl is stripped of bypass prefixes.
-    // Prepend the primary Freedium URL.
-    return '${MediumConstants.freediumUrl}/$targetUrl';
+    // Prepend the active bypass engine URL.
+    final activeEngine = Get.find<StorageService>().activeEngineUrl;
+    return '$activeEngine/$targetUrl';
   }
 
   /// Validate and clean URL
