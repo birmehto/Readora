@@ -1,56 +1,44 @@
+import 'dart:async';
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 
-import '../../features/home/controllers/home_controller.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+
+import '../../features/home/presentation/controllers/home_controller.dart';
 import '../utils/url_validator.dart';
 
 class ShareIntentService extends GetxService {
-  static const _channel = MethodChannel('app.channel.shared.data');
+  String? pendingUrl;
+  StreamSubscription? _intentSub;
 
   Future<ShareIntentService> init() async {
-    if (!Platform.isAndroid) {
-      // Share intent via MethodChannel is Android-only.
-      // iOS share extension support is a follow-up.
+    if (!Platform.isAndroid && !Platform.isIOS) {
       return this;
     }
 
     // Handle incoming intents when app is running
-    _channel.setMethodCallHandler((call) async {
-      if (call.method == 'handleSharedUrl') {
-        final String? sharedText = call.arguments as String?;
-        if (sharedText != null && sharedText.isNotEmpty) {
-          // Extract URL from shared text (which may contain title, etc.)
-          String? url = UrlValidator.extractUrlFromText(sharedText);
-
-          if (url != null) {
-            // Clean Textise URL if present
-            url = UrlValidator.cleanTextiseUrl(url);
-
-            if (url != null && url.isNotEmpty) {
-              _openArticle(url);
-            }
-          }
+    _intentSub = ReceiveSharingIntent.instance.getMediaStream().listen(
+      (files) {
+        if (files.isNotEmpty) {
+          final sharedText = files.first.path;
+          _processSharedText(sharedText);
         }
-      }
-    });
+      },
+      onError: (err) {
+        // Ignored
+      },
+    );
 
     // Check for initial intent when app starts
     try {
-      final String? sharedText = await _channel.invokeMethod('getInitialUrl');
-      if (sharedText != null && sharedText.isNotEmpty) {
-        // Extract URL from shared text
-        String? url = UrlValidator.extractUrlFromText(sharedText);
-
-        if (url != null) {
-          // Clean Textise URL if present
-          url = UrlValidator.cleanTextiseUrl(url);
-
-          if (url != null && url.isNotEmpty) {
-            _openArticle(url);
-          }
-        }
+      final List<SharedMediaFile> initialMedia = await ReceiveSharingIntent
+          .instance
+          .getInitialMedia();
+      if (initialMedia.isNotEmpty) {
+        final sharedText = initialMedia.first.path;
+        _processSharedText(sharedText);
+        ReceiveSharingIntent.instance.reset();
       }
     } catch (e) {
       // Ignored
@@ -59,52 +47,35 @@ class ShareIntentService extends GetxService {
     return this;
   }
 
+  void _processSharedText(String? sharedText) {
+    if (sharedText == null || sharedText.isEmpty) return;
+
+    // Extract and clean URL
+    String? url = UrlValidator.extractUrlFromText(sharedText);
+    if (url != null) {
+      url = UrlValidator.cleanTextiseUrl(url);
+      if (url != null && url.isNotEmpty) {
+        _openArticle(url);
+      }
+    }
+  }
+
   void _openArticle(String url) {
     if (Get.isRegistered<HomeController>()) {
       final homeController = Get.find<HomeController>();
       homeController.urlController.text = url;
       homeController.onUrlChanged(url);
-      homeController.openArticle();
+      WidgetsBinding.instance.addPostFrameCallback(
+        (_) => homeController.openArticle(),
+      );
     } else {
-      // If controller not ready/registered (e.g. app start), wait or navigate
-      // Since this service inits before runApp generally, or in parallel,
-      // safer to wait for UI to be ready via Get.
-
-      // Post-frame callback or simple polling/routing.
-      // Easiest is to navigate to Home with args if using GetX routing,
-      // but HomeController openArticle logic is specific.
-
-      // Let's assume Home is the first page.
-      // We can use a slight delay or Get.offAllNamed if we want to ensure we are on Home.
-
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        // Wait for Home to be mounted
-        // Actually, if we are at app start, Home might NOT be ready yet.
-        // A simple delay loop or listener could work, but let's try pushing the route logic.
-
-        // Assuming App is standard GetMaterialApp
-
-        // Simple retry logic
-        if (Get.isRegistered<HomeController>()) {
-          final ctrl = Get.find<HomeController>();
-          ctrl.urlController.text = url;
-          ctrl.onUrlChanged(url);
-          ctrl.openArticle();
-        } else {
-          // If not registered, maybe we are too early.
-          // We can store it in a static variable handled by HomeController onInit,
-          // or just retry.
-
-          // Retry once after 1s
-          await Future.delayed(const Duration(seconds: 1));
-          if (Get.isRegistered<HomeController>()) {
-            final ctrl = Get.find<HomeController>();
-            ctrl.urlController.text = url;
-            ctrl.onUrlChanged(url);
-            ctrl.openArticle();
-          }
-        }
-      });
+      pendingUrl = url;
     }
+  }
+
+  @override
+  void onClose() {
+    _intentSub?.cancel();
+    super.onClose();
   }
 }

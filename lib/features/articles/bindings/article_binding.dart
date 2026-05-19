@@ -1,6 +1,6 @@
 import 'package:get/get.dart';
 
-import '../controllers/article_controller.dart';
+import '../presentation/controllers/article_controller.dart';
 
 class ArticleBinding extends Bindings {
   @override
