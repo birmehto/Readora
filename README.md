@@ -1,31 +1,31 @@
 # 📖 Readora
 
-A clean, distraction-free reader for Medium articles.
+A free, open-source Medium reader for **Android & iOS** — bypass paywalls, enjoy clean typography, and read without distractions.
 
-Read Medium stories in a focused layout without ads, popups, or visual noise.
+<p align="center">
+  <img src="screenshots/home.png" width="180" alt="Home"/>
+  <img src="screenshots/article.png" width="180" alt="Reader"/>
+  <img src="screenshots/article_settings.png" width="180" alt="Reader Settings"/>
+  <img src="screenshots/favorites.png" width="180" alt="Favorites"/>
+</p>
 
----
+## Features
 
-## Why Readora?
+- 🛡️ **Failover bypass engines** — auto-switches between Freedium Mirror, Freedium CFD & ReadMedium
+- 💾 **Scroll position resume** — remembers exactly where you left off
+- ⭐ **Offline favorites** — save articles locally, no account needed
+- 🌙 **Dark & light themes** — plus customizable fonts, sizes & spacing
+- 🔗 **Share intent support** — share any Medium link and it opens directly in Readora
+- 📊 **Reading progress bar** — real-time scroll indicator in the app bar
 
-- **🧘 Distraction-free** — Minimal reading experience with no clutter  
-- **⚡ Fast loading** — Opens Medium articles through public mirrors  
-- **🎨 Customizable** — Fonts, spacing, themes, and dark mode  
-- **⭐ Save & revisit** — Bookmark your favorite articles  
+## Download
 
-Works with all Medium links — publications, custom domains, and shared URLs.
+| Platform | Link |
+|----------|------|
+| 🤖 Android APK | [Latest Release](https://github.com/birmehto/Readora/releases/latest) |
+| 🍎 iOS (unsigned IPA) | [Latest Release](https://github.com/birmehto/Readora/releases/latest) |
 
----
-
-## How it works
-
-Readora opens Medium articles using **publicly available reader endpoints** (such as Freedium) that provide clean, readable versions of articles already accessible on the web.
-
-Readora does **not** host, store, or modify any copyrighted content.
-
----
-
-## Get Started
+## Build from Source
 
 ```bash
 git clone https://github.com/birmehto/readora.git
@@ -34,23 +34,10 @@ flutter pub get
 flutter run
 ```
 
-## Screenshots
+## Legal
 
-<p align="center">
-  <img src="screenshots/home.png" width="200" alt="Home"/>
-  <img src="screenshots/article.png" width="200" alt="Article"/>
-  <img src="screenshots/favorites.png" width="200" alt="Favorites"/>
-  <img src="screenshots/settings.png" width="200" alt="Settings"/>
-</p>
+Open-source project — not affiliated with Medium. Uses public reader endpoints. All content © original authors. [MIT License](LICENSE).
 
 ## Support
 
 Like Readora? [Buy me a coffee ☕](https://buymeacoffee.com/birmehto)
-
-## Legal
-
-Independent open-source project. Not affiliated with Medium. Exclusively uses [Freedium](https://freedium.cfd) for article access. All content © original authors. [MIT License](LICENSE).
-
----
-
-**Read more. Scroll less. Stay focused.** 📚
